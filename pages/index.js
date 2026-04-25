@@ -612,6 +612,84 @@ export default function Home() {
     </div>
   </div>
 </section>
+{/* CONTACT + FOOTER */}
+<section className="px-6 py-24 bg-[#f8f6ef]">
+  <div className="max-w-6xl mx-auto grid gap-12 md:grid-cols-2 items-start">
+    <div>
+      <p className="tracking-[0.4em] text-[#d9a514] font-bold">
+        CONTACT US
+      </p>
+
+      <h2 className="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight text-[#0f172a]">
+        Speak with Perfect Foundation Academy.
+      </h2>
+
+      <p className="mt-6 text-xl leading-9 text-[#64748b]">
+        Contact the school office for admissions, visits, enquiries and general
+        information.
+      </p>
+
+      <div className="mt-10 grid gap-5 text-lg">
+        <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
+          📞 <span className="font-bold">Phone / WhatsApp:</span> +233244986221
+        </div>
+
+        <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
+          📍 <span className="font-bold">Address:</span> Oshuman, Top Radio,
+          Accra, Ghana
+        </div>
+
+        <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
+          🕒 <span className="font-bold">Office Hours:</span> Monday – Friday
+        </div>
+      </div>
+
+      <a
+        href="https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child."
+        target="_blank"
+        rel="noreferrer"
+        className="mt-10 inline-block bg-[#20b957] text-white px-8 py-5 rounded-2xl text-xl font-black shadow-xl hover:shadow-2xl transition"
+      >
+        💬 Chat on WhatsApp
+      </a>
+    </div>
+
+    <div className="bg-[#0f172a] text-white rounded-[2rem] p-10 shadow-2xl">
+      <div className="w-20 h-20 rounded-3xl bg-[#f4b41a] text-[#0f172a] flex items-center justify-center text-4xl">
+        🎓
+      </div>
+
+      <h3 className="mt-8 text-3xl font-black">
+        Perfect Foundation Academy
+      </h3>
+
+      <p className="mt-5 text-gray-300 text-lg leading-8">
+        A Ghanaian private school building excellence, discipline, faith and a
+        strong academic foundation in every child.
+      </p>
+
+      <div className="mt-8 h-[1px] bg-white/20" />
+
+      <div className="mt-8 grid gap-3 text-gray-300">
+        <p>Creche</p>
+        <p>Nursery</p>
+        <p>Kindergarten</p>
+        <p>Primary School</p>
+        <p>Junior High School</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer className="bg-[#071326] text-white px-6 py-10 text-center">
+  <h2 className="text-2xl font-black">Perfect Foundation Academy</h2>
+  <p className="mt-3 text-[#f4b41a] tracking-[0.25em] text-sm">
+    EXCELLENCE • DISCIPLINE • FAITH
+  </p>
+  <p className="mt-6 text-gray-400">
+    © 2026 Perfect Foundation Academy. All rights reserved.
+  </p>
+</footer>
       {/* FLOATING WHATSAPP */}
       <a
         href={whatsapp}

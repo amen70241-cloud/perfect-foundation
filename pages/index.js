@@ -475,6 +475,64 @@ export default function Home() {
     </form>
   </div>
 </section>
+{/* EVENTS & ACHIEVEMENTS */}
+<section className="px-6 py-24 bg-[#f8f6ef]">
+  <div className="max-w-6xl mx-auto">
+    <div className="text-center max-w-3xl mx-auto">
+      <p className="tracking-[0.4em] text-[#d9a514] font-bold">
+        EVENTS & ACHIEVEMENTS
+      </p>
+
+      <h2 className="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight text-[#0f172a]">
+        Celebrating learning, culture and excellence.
+      </h2>
+
+      <p className="mt-6 text-xl leading-8 text-[#64748b]">
+        Perfect Foundation Academy celebrates every milestone — from graduation
+        ceremonies to speech and prize giving, career day and culture day.
+      </p>
+    </div>
+
+    <div className="mt-14 grid gap-8 md:grid-cols-3">
+      {[
+        {
+          title: "Graduation Ceremonies",
+          icon: "🎓",
+          text: "A joyful celebration of pupils completing important academic stages with family, staff and invited guests.",
+        },
+        {
+          title: "Speech & Prize Giving",
+          icon: "🏆",
+          text: "Recognising academic excellence, discipline, leadership, service, creativity and outstanding performance.",
+        },
+        {
+          title: "Career & Culture Day",
+          icon: "🌍",
+          text: "Helping pupils appreciate culture, identity and future career paths through presentations and performances.",
+        },
+      ].map((event) => (
+        <div
+          key={event.title}
+          className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 hover:shadow-2xl transition"
+        >
+          <div className="w-16 h-16 rounded-2xl bg-[#0f172a] text-[#f4b41a] flex items-center justify-center text-3xl">
+            {event.icon}
+          </div>
+
+          <h3 className="mt-8 text-3xl font-black text-[#0f172a]">
+            {event.title}
+          </h3>
+
+          <p className="mt-5 text-lg leading-8 text-[#64748b]">
+            {event.text}
+          </p>
+
+          <div className="mt-8 h-1 w-20 bg-[#f4b41a] rounded-full" />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
       {/* FLOATING WHATSAPP */}
       <a
         href={whatsapp}

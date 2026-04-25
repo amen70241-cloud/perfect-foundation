@@ -48,7 +48,9 @@ export default function Home() {
       <a href="#downloads" onClick={() => setMenuOpen(false)}>
         Downloads
       </a>
-
+      <a href="/login" onClick={() => setMenuOpen(false)}>
+  Portal Login
+</a>
       <a
         href="https://wa.me/233244986221"
         target="_blank"

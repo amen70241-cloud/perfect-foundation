@@ -381,6 +381,100 @@ export default function Home() {
     </div>
   </div>
 </section> 
+{/* ADMISSIONS */}
+<section id="admissions" className="px-6 py-24 bg-[#0f172a] text-white">
+  <div className="max-w-6xl mx-auto grid gap-12 md:grid-cols-2 items-start">
+    <div>
+      <p className="tracking-[0.4em] text-[#f4b41a] font-bold">
+        ADMISSIONS
+      </p>
+
+      <h2 className="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+        Join the Perfect Foundation Academy family.
+      </h2>
+
+      <p className="mt-8 text-xl leading-9 text-gray-300">
+        Admissions are open for Creche, Nursery, Kindergarten, Primary and JHS.
+        Our team is ready to guide you from your first enquiry to your child’s
+        first day in class.
+      </p>
+
+      <div className="mt-10 grid gap-5">
+        <a
+          href="https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child."
+          target="_blank"
+          rel="noreferrer"
+          className="bg-[#f4b41a] text-[#0f172a] text-center py-5 rounded-2xl text-xl font-black shadow-xl hover:shadow-2xl transition"
+        >
+          Start Admission Enquiry →
+        </a>
+
+        <a
+          href="https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child."
+          target="_blank"
+          rel="noreferrer"
+          className="bg-[#20b957] text-white text-center py-5 rounded-2xl text-xl font-black shadow-xl hover:shadow-2xl transition"
+        >
+          💬 Enquire on WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <form className="bg-white rounded-[2rem] p-8 shadow-2xl text-[#0f172a]">
+      <h3 className="text-3xl font-black tracking-tight">
+        Admission Enquiry Form
+      </h3>
+
+      <p className="mt-3 text-[#64748b]">
+        Fill this form and the school will contact you.
+      </p>
+
+      <div className="mt-8 grid gap-5">
+        <input
+          className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
+          placeholder="Parent / Guardian Name"
+        />
+
+        <input
+          className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
+          placeholder="Phone Number"
+        />
+
+        <input
+          className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
+          placeholder="Child’s Name"
+        />
+
+        <input
+          className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
+          placeholder="Child’s Age"
+        />
+
+        <select className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]">
+          <option>Select desired class</option>
+          <option>Creche</option>
+          <option>Nursery</option>
+          <option>Kindergarten</option>
+          <option>Primary School</option>
+          <option>Junior High School</option>
+        </select>
+
+        <textarea
+          className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
+          rows="4"
+          placeholder="Message"
+        />
+
+        <button
+          type="button"
+          className="bg-[#f4b41a] text-[#0f172a] py-5 rounded-2xl text-xl font-black shadow-lg hover:shadow-xl transition"
+        >
+          Send Enquiry ✈
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
       {/* FLOATING WHATSAPP */}
       <a
         href={whatsapp}

@@ -11,7 +11,7 @@ body {
   overflow-x: hidden;
 }
 
-/* SAFE FADE ANIMATION (used in hero) */
+/* HERO ANIMATION */
 .fade-up {
   animation: fadeUp 0.9s ease-out both;
 }
@@ -28,7 +28,6 @@ body {
   animation-delay: 0.45s;
 }
 
-/* KEYFRAMES */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -41,19 +40,46 @@ body {
   }
 }
 
-/* KEEP SECTIONS VISIBLE (VERY IMPORTANT FIX) */
+/* SAFE SCROLL ANIMATION */
+/* Default: always visible */
 .scroll-fade {
   opacity: 1;
   transform: none;
 }
 
-/* NAVBAR SHADOW (premium feel) */
+/* Modern browsers: animate sections as they enter view */
+@supports (animation-timeline: view()) {
+  .scroll-fade {
+    animation: sectionReveal both ease-out;
+    animation-timeline: view();
+    animation-range: entry 10% cover 30%;
+  }
+}
+
+@keyframes sectionReveal {
+  from {
+    opacity: 0;
+    transform: translateY(45px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* NAVBAR SHADOW */
 .nav-shadow {
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
-/* OPTIONAL HOVER POLISH */
+/* SMOOTH HOVER FEEL */
 button,
 a {
   transition: all 0.3s ease;
+}
+
+/* IMAGE POLISH */
+img {
+  transition: transform 0.5s ease;
 }

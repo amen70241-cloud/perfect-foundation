@@ -533,6 +533,85 @@ export default function Home() {
     </div>
   </div>
 </section>
+{/* DOWNLOADS & ACADEMIC CALENDAR */}
+<section className="px-6 py-24 bg-[#0f172a] text-white">
+  <div className="max-w-6xl mx-auto grid gap-12 md:grid-cols-2 items-start">
+    
+    {/* LEFT SIDE */}
+    <div>
+      <p className="tracking-[0.4em] text-[#f4b41a] font-bold">
+        DOWNLOADS
+      </p>
+
+      <h2 className="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight">
+        Important school documents.
+      </h2>
+
+      <p className="mt-6 text-xl leading-9 text-gray-300">
+        Access admission forms, school prospectus and academic calendar for the term.
+      </p>
+
+      <div className="mt-10 grid gap-5">
+        <a
+          href="#"
+          className="bg-white/10 border border-white/10 rounded-2xl p-5 hover:bg-white/20 transition"
+        >
+          📄 Admission Form (PDF)
+        </a>
+
+        <a
+          href="#"
+          className="bg-white/10 border border-white/10 rounded-2xl p-5 hover:bg-white/20 transition"
+        >
+          📘 School Prospectus
+        </a>
+
+        <a
+          href="#"
+          className="bg-white/10 border border-white/10 rounded-2xl p-5 hover:bg-white/20 transition"
+        >
+          📅 Academic Calendar
+        </a>
+      </div>
+    </div>
+
+    {/* RIGHT SIDE */}
+    <div className="bg-white rounded-[2rem] p-8 shadow-2xl text-[#0f172a]">
+      <h3 className="text-3xl font-black tracking-tight">
+        Academic Calendar Preview
+      </h3>
+
+      <div className="mt-8 grid gap-4">
+        <div className="flex justify-between border-b pb-3">
+          <span>Term Begins</span>
+          <span className="font-bold">September 2026</span>
+        </div>
+
+        <div className="flex justify-between border-b pb-3">
+          <span>Mid-Term Break</span>
+          <span className="font-bold">October</span>
+        </div>
+
+        <div className="flex justify-between border-b pb-3">
+          <span>Examinations</span>
+          <span className="font-bold">December</span>
+        </div>
+
+        <div className="flex justify-between">
+          <span>Vacation</span>
+          <span className="font-bold">December</span>
+        </div>
+      </div>
+
+      <a
+        href="#"
+        className="mt-8 block text-center bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black shadow-lg hover:shadow-xl transition"
+      >
+        Download Full Calendar
+      </a>
+    </div>
+  </div>
+</section>
       {/* FLOATING WHATSAPP */}
       <a
         href={whatsapp}

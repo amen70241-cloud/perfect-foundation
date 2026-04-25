@@ -1,4 +1,6 @@
+import { useState } from "react";
 export default function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
   const whatsapp =
     "https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child.";
 
@@ -22,10 +24,40 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="text-4xl font-bold text-[#0f172a]">☰</div>
+          <button
+  onClick={() => setMenuOpen(!menuOpen)}
+  className="text-4xl font-bold text-[#0f172a]"
+>
+  ☰
+</button>
         </div>
       </header>
+{menuOpen && (
+  <div className="fixed top-24 right-6 z-50 bg-white rounded-3xl shadow-2xl border border-gray-100 p-6 w-72">
+    <div className="grid gap-4 text-lg font-bold text-[#0f172a]">
+      <a href="#programmes" onClick={() => setMenuOpen(false)}>
+        Programmes
+      </a>
 
+      <a href="#admissions" onClick={() => setMenuOpen(false)}>
+        Admissions
+      </a>
+
+      <a href="#downloads" onClick={() => setMenuOpen(false)}>
+        Downloads
+      </a>
+
+      <a
+        href="https://wa.me/233244986221"
+        target="_blank"
+        onClick={() => setMenuOpen(false)}
+        className="bg-[#20b957] text-white text-center py-3 rounded-2xl"
+      >
+        WhatsApp Us
+      </a>
+    </div>
+  </div>
+)}
       {/* HERO */}
       <section
         className="relative min-h-screen bg-cover bg-center"

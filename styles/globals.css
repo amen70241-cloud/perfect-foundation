@@ -1,9 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-html {
-  scroll-behavior: smooth;
-}
+
+/* GLOBAL SETTINGS */
 html {
   scroll-behavior: smooth;
 }
@@ -12,63 +11,7 @@ body {
   overflow-x: hidden;
 }
 
-.fade-up {
-  animation: fadeUp 0.8s ease-out both;
-}
-
-.fade-in {
-  animation: fadeIn 0.9s ease-out both;
-}
-
-.delay-1 {
-  animation-delay: 0.15s;
-}
-
-.delay-2 {
-  animation-delay: 0.3s;
-}
-
-.delay-3 {
-  animation-delay: 0.45s;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(35px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-.scroll-fade {
-  opacity: 0;
-  transform: translateY(45px);
-  transition: opacity 0.9s ease, transform 0.9s ease;
-}
-
-.scroll-fade.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.nav-shadow {
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-}
-html {
-  scroll-behavior: smooth;
-}
-
+/* SAFE FADE ANIMATION (used in hero) */
 .fade-up {
   animation: fadeUp 0.9s ease-out both;
 }
@@ -85,6 +28,7 @@ html {
   animation-delay: 0.45s;
 }
 
+/* KEYFRAMES */
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -95,4 +39,21 @@ html {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* KEEP SECTIONS VISIBLE (VERY IMPORTANT FIX) */
+.scroll-fade {
+  opacity: 1;
+  transform: none;
+}
+
+/* NAVBAR SHADOW (premium feel) */
+.nav-shadow {
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+/* OPTIONAL HOVER POLISH */
+button,
+a {
+  transition: all 0.3s ease;
 }

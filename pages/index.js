@@ -161,7 +161,7 @@ export default function Home() {
       </section>
 
       {/* ABOUT */}
-      <section className="px-6 py-24 bg-[#f8f6ef]">
+      <section className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
         <div className="max-w-6xl mx-auto">
           <div className="max-w-4xl">
             <p className="tracking-[0.4em] text-[#d9a514] font-bold">
@@ -227,7 +227,7 @@ export default function Home() {
       </section>
 
       {/* FOUNDER SECTION */}
-      <section className="px-6 py-24 bg-[#0f172a] text-white">
+      <section className="scroll-fade px-6 py-24 bg-[#0f172a] text-white">
         <div className="max-w-6xl mx-auto grid gap-14 md:grid-cols-2 items-center">
           <div className="relative">
             <div className="absolute -top-6 -left-6 w-32 h-32 bg-[#f4b41a] rounded-full blur-3xl opacity-30"></div>
@@ -310,7 +310,7 @@ export default function Home() {
       </section>
 
            {/* PROGRAMMES */}
-      <section id="programmes" className="px-6 py-24 bg-[#f8f6ef]">
+      <section id="programmes" className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-3xl mx-auto">
             <p className="tracking-[0.4em] text-[#d9a514] font-bold">
@@ -390,7 +390,7 @@ export default function Home() {
         </div>
       </section>
       {/* GALLERY */}
-<section className="px-6 py-24 bg-[#f8f6ef]">
+<section className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
   <div className="max-w-6xl mx-auto text-center">
     <p className="tracking-[0.4em] text-[#d9a514] font-bold">
       LIFE AT PFA
@@ -439,7 +439,7 @@ export default function Home() {
   </div>
 </section> 
 {/* ADMISSIONS */}
-<section id="admissions" className="px-6 py-24 bg-[#0f172a] text-white">
+<section id="admissions" className="scroll-fade px-6 py-24 bg-[#0f172a] text-white">
   <div className="max-w-6xl mx-auto grid gap-12 md:grid-cols-2 items-start">
     <div>
       <p className="tracking-[0.4em] text-[#f4b41a] font-bold">
@@ -547,9 +547,9 @@ export default function Home() {
       </div>
     </form>
   </div>
-</section>
+<section className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
 {/* EVENTS & ACHIEVEMENTS */}
-<section className="px-6 py-24 bg-[#f8f6ef]">
+<section className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
   <div className="max-w-6xl mx-auto">
     <div className="text-center max-w-3xl mx-auto">
       <p className="tracking-[0.4em] text-[#d9a514] font-bold">
@@ -607,7 +607,7 @@ export default function Home() {
   </div>
 </section>
 {/* DOWNLOADS & ACADEMIC CALENDAR */}
-<section className="px-6 py-24 bg-[#0f172a] text-white">
+<section id="downloads" className="scroll-fade px-6 py-24 bg-[#0f172a] text-white">
   <div className="max-w-6xl mx-auto grid gap-12 md:grid-cols-2 items-start">
     
     {/* LEFT SIDE */}
@@ -686,7 +686,7 @@ export default function Home() {
   </div>
 </section>
 {/* CONTACT + FOOTER */}
-<section id="contact" className="px-6 py-24 bg-[#f8f6ef]">
+<section id="contact" className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
   <div className="max-w-6xl mx-auto grid gap-12 md:grid-cols-2 items-start">
     <div>
       <p className="tracking-[0.4em] text-[#d9a514] font-bold">

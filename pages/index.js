@@ -38,7 +38,9 @@ export default function Home() {
       <a href="#programmes" onClick={() => setMenuOpen(false)}>
         Programmes
       </a>
-
+<a href="#contact" onClick={() => setMenuOpen(false)}>
+  Contact
+</a>
       <a href="#admissions" onClick={() => setMenuOpen(false)}>
         Admissions
       </a>
@@ -71,12 +73,12 @@ export default function Home() {
             ● A GHANAIAN PRIVATE SCHOOL
           </div>
 
-          <h2 className="mt-12 text-5xl md:text-7xl font-black tracking-tight leading-tight">
+          <h2 className="fade-up mt-12 text-5xl md:text-7xl font-black tracking-tight leading-tight">
             Perfect Foundation <br />
             <span className="text-[#f4b41a]">Academy</span>
           </h2>
 
-          <p className="mt-10 text-2xl md:text-3xl italic leading-snug max-w-3xl">
+          <p className="fade-up delay-1 mt-10 text-2xl md:text-3xl italic leading-snug max-w-3xl">
             Building Excellence, Discipline, Faith, and a Strong Academic
             Foundation.
           </p>
@@ -87,7 +89,7 @@ export default function Home() {
             School.
           </p>
 
-          <div className="mt-12 grid gap-5 max-w-xl">
+          <div className="fade-up delay-2 mt-12 grid gap-5 max-w-xl">
             <a
               href="#admissions"
               className="bg-[#f4b41a] text-[#0f172a] text-center py-5 rounded-2xl text-xl md:text-2xl font-extrabold shadow-xl hover:shadow-2xl transition"
@@ -110,7 +112,7 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="mt-16 grid grid-cols-3 gap-6 max-w-2xl">
+          <div className="fade-up delay-3 mt-16 grid grid-cols-3 gap-6 max-w-2xl">
             <div className="border-l-4 border-[#f4b41a] pl-5">
               <h3 className="text-3xl md:text-4xl font-black text-[#f4b41a]">
                 5
@@ -665,7 +667,7 @@ export default function Home() {
   </div>
 </section>
 {/* CONTACT + FOOTER */}
-<section className="px-6 py-24 bg-[#f8f6ef]">
+<section id="contact" className="px-6 py-24 bg-[#f8f6ef]">
   <div className="max-w-6xl mx-auto grid gap-12 md:grid-cols-2 items-start">
     <div>
       <p className="tracking-[0.4em] text-[#d9a514] font-bold">

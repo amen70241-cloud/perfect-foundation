@@ -332,7 +332,55 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* GALLERY */}
+<section className="px-6 py-24 bg-[#f8f6ef]">
+  <div className="max-w-6xl mx-auto text-center">
+    <p className="tracking-[0.4em] text-[#d9a514] font-bold">
+      LIFE AT PFA
+    </p>
 
+    <h2 className="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight text-[#0f172a]">
+      A glimpse into our classrooms & community.
+    </h2>
+
+    <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6">
+      {[
+        {
+          title: "Early Years",
+          img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=800",
+        },
+        {
+          title: "Primary Class",
+          img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800",
+        },
+        {
+          title: "Caring Teachers",
+          img: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800",
+        },
+        {
+          title: "Science Lab",
+          img: "https://images.unsplash.com/photo-1581093588401-fbb62a02f120?q=80&w=800",
+        },
+      ].map((item) => (
+        <div
+          key={item.title}
+          className="relative overflow-hidden rounded-3xl shadow-lg group"
+        >
+          <img
+            src={item.img}
+            className="w-full h-56 object-cover group-hover:scale-110 transition duration-500"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] to-transparent opacity-80" />
+
+          <p className="absolute bottom-4 left-4 text-white text-xl font-bold">
+            {item.title}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section> 
       {/* FLOATING WHATSAPP */}
       <a
         href={whatsapp}

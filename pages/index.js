@@ -14,12 +14,8 @@ export default function Home() {
       },
       { threshold: 0.15 }
     );
-
     const hiddenElements = document.querySelectorAll(".scroll-fade");
     hiddenElements.forEach((el) => observer.observe(el));
-
-    return () => {
-      hiddenElements.forEach((el) => observer.unobserve(el));
     };
   }, []);
   const whatsapp =

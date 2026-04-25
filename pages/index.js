@@ -452,7 +452,11 @@ export default function Home() {
       </div>
     </div>
 
-    <form className="bg-white rounded-[2rem] p-8 shadow-2xl text-[#0f172a]">
+    <form
+  action="https://formspree.io/f/mvzdyaln"
+  method="POST"
+  className="bg-white rounded-[2rem] p-8 shadow-2xl text-[#0f172a]"
+>
       <h3 className="text-3xl font-black tracking-tight">
         Admission Enquiry Form
       </h3>
@@ -463,42 +467,58 @@ export default function Home() {
 
       <div className="mt-8 grid gap-5">
         <input
-          className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
-          placeholder="Parent / Guardian Name"
-        />
+  name="parent_name"
+  required
+  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
+  placeholder="Parent / Guardian Name"
+/>
 
         <input
-          className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
-          placeholder="Phone Number"
-        />
+  name="phone"
+  required
+  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
+  placeholder="Phone Number"
+/>
+
+       <input
+  name="child_name"
+  required
+  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
+  placeholder="Child’s Name"
+/>
 
         <input
-          className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
-          placeholder="Child’s Name"
-        />
+  name="child_age"
+  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
+  placeholder="Child’s Age"
+/>
 
-        <input
-          className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
-          placeholder="Child’s Age"
-        />
-
-        <select className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]">
-          <option>Select desired class</option>
-          <option>Creche</option>
-          <option>Nursery</option>
-          <option>Kindergarten</option>
-          <option>Primary School</option>
-          <option>Junior High School</option>
-        </select>
+        <select
+  name="desired_class"
+  required
+  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
+>
+  <option>Select desired class</option>
+  <option>Creche</option>
+  <option>Nursery</option>
+  <option>Kindergarten</option>
+  <option>Primary School</option>
+  <option>Junior High School</option>
+</select>
 
         <textarea
-          className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
-          rows="4"
-          placeholder="Message"
-        />
+  name="message"
+  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
+  rows="4"
+  placeholder="Message"
+/>
 
-        <button
-          type="button"
+       <button
+  type="submit"
+  className="bg-[#f4b41a] text-[#0f172a] py-5 rounded-2xl text-xl font-black shadow-lg hover:shadow-xl transition"
+>
+  Send Enquiry ✈
+</button>
           className="bg-[#f4b41a] text-[#0f172a] py-5 rounded-2xl text-xl font-black shadow-lg hover:shadow-xl transition"
         >
           Send Enquiry ✈

@@ -516,11 +516,7 @@ export default function Home() {
 />
 
        <button
-  type="submit"
-  className="bg-[#f4b41a] text-[#0f172a] py-5 rounded-2xl text-xl font-black shadow-lg hover:shadow-xl transition"
->
-  Send Enquiry ✈
-</button>
+  type="button"
           className="bg-[#f4b41a] text-[#0f172a] py-5 rounded-2xl text-xl font-black shadow-lg hover:shadow-xl transition"
         >
           Send Enquiry ✈

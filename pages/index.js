@@ -526,7 +526,7 @@ export default function Home() {
       </div>
     </form>
   </div>
-<section className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
+            </section>
 {/* EVENTS & ACHIEVEMENTS */}
 <section className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
   <div className="max-w-6xl mx-auto">

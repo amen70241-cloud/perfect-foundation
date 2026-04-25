@@ -1,31 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("show");
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    const hiddenElements = document.querySelectorAll(".scroll-fade");
-    hiddenElements.forEach((el) => observer.observe(el));
-
-    return () => {
-      hiddenElements.forEach((el) => observer.unobserve(el));
-    };
-  }, []);
-
   const whatsapp =
-    "https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child.";
-
+    "https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy";
   return (
     <main className="bg-[#f8f6ef] text-[#1e293b]">
       {/* HEADER */}

@@ -73,8 +73,7 @@ export default function Home() {
       <a href="/login" onClick={() => setMenuOpen(false)}>
   Portal Login
 </a>
-      <a
-        href="https://wa.me/233244986221"
+      <a href="https://wa.me/233244986221"
         target="_blank"
         onClick={() => setMenuOpen(false)}
         className="bg-[#20b957] text-white text-center py-3 rounded-2xl"
@@ -764,15 +763,16 @@ export default function Home() {
     © 2026 Perfect Foundation Academy. All rights reserved.
   </p>
 </footer>
-      {/* FLOATING WHATSAPP */}
-      <a
-        href={whatsapp}
-        target="_blank"
-        rel="noreferrer"
-        className="fixed bottom-6 right-6 z-50 w-20 h-20 rounded-full bg-[#20b957] text-white flex items-center justify-center text-4xl shadow-2xl"
-      >
-        💬
-      </a>
-    </main>
-  );
+     {/* FLOATING WHATSAPP */}
+<a
+  href="https://wa.me/233244986221"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="fixed bottom-6 right-6 z-50 w-20 h-20 rounded-full bg-[#25D366] text-white flex items-center justify-center text-3xl shadow-xl hover:scale-110 transition"
+>
+  💬
+</a>
+
+</main>
+);
 }

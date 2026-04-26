@@ -4,6 +4,8 @@ import { supabase } from "../lib/supabase";
 export default function Portal() {
   const [student, setStudent] = useState(null);
   const [fees, setFees] = useState([]);
+  const [results, setResults] = useState([]);
+  const [attendance, setAttendance] = useState([]);
   const [message, setMessage] = useState("Loading portal...");
 
   useEffect(() => {
@@ -32,18 +34,28 @@ export default function Portal() {
       return;
     }
 
-    const { data: feesData, error: feesError } = await supabase
+    const { data: feesData } = await supabase
       .from("fees")
       .select("*")
       .eq("student_id", selectedStudent.id)
       .order("created_at", { ascending: false });
 
-    if (feesError) {
-      setMessage(feesError.message);
-      return;
-    }
+    const { data: resultsData } = await supabase
+      .from("results")
+      .select("*")
+      .eq("student_id", selectedStudent.id)
+      .eq("published", true)
+      .order("created_at", { ascending: false });
+
+    const { data: attendanceData } = await supabase
+      .from("attendance")
+      .select("*")
+      .eq("student_id", selectedStudent.id)
+      .order("created_at", { ascending: false });
 
     setFees(feesData || []);
+    setResults(resultsData || []);
+    setAttendance(attendanceData || []);
     setMessage("");
   }
 
@@ -53,6 +65,14 @@ export default function Portal() {
   const paidAmount = latestFee ? Number(latestFee.paid_amount || 0) : 0;
   const balance = latestFee ? Number(latestFee.balance || 0) : 0;
   const feeStatus = latestFee?.status || "No Record";
+
+  const averageScore =
+    results.length > 0
+      ? Math.round(
+          results.reduce((sum, item) => sum + Number(item.score || 0), 0) /
+            results.length
+        )
+      : null;
 
   return (
     <main className="min-h-screen bg-[#f8f6ef] text-[#0f172a]">
@@ -99,27 +119,14 @@ export default function Portal() {
               </p>
             </div>
 
-            <div className="mt-8 grid gap-6 md:grid-cols-3">
-              <div className="bg-white rounded-3xl p-6 shadow border border-gray-100">
-                <p className="text-[#64748b] font-bold">Class</p>
-                <h3 className="mt-3 text-3xl font-black">
-                  {student.class || "Not assigned"}
-                </h3>
-              </div>
-
-              <div className="bg-white rounded-3xl p-6 shadow border border-gray-100">
-                <p className="text-[#64748b] font-bold">Fee Status</p>
-                <h3 className="mt-3 text-3xl font-black text-[#d9a514] capitalize">
-                  {feeStatus}
-                </h3>
-              </div>
-
-              <div className="bg-white rounded-3xl p-6 shadow border border-gray-100">
-                <p className="text-[#64748b] font-bold">Attendance</p>
-                <h3 className="mt-3 text-3xl font-black text-green-600">
-                  Coming Soon
-                </h3>
-              </div>
+            <div className="mt-8 grid gap-6 md:grid-cols-4">
+              <Stat title="Class" value={student.class || "Not assigned"} />
+              <Stat title="Fee Status" value={feeStatus} highlight />
+              <Stat
+                title="Average Score"
+                value={averageScore ? `${averageScore}%` : "No Results"}
+              />
+              <Stat title="Attendance Records" value={attendance.length} />
             </div>
 
             <div className="mt-8 grid gap-6 md:grid-cols-2">
@@ -128,33 +135,18 @@ export default function Portal() {
 
                 {latestFee ? (
                   <div className="mt-6 space-y-4 text-lg">
-                    <div className="flex justify-between border-b pb-3">
-                      <span>Total Fees</span>
-                      <span className="font-bold">
-                        GHS {totalFee.toLocaleString()}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between border-b pb-3">
-                      <span>Amount Paid</span>
-                      <span className="font-bold text-green-600">
-                        GHS {paidAmount.toLocaleString()}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between border-b pb-3">
-                      <span>Balance</span>
-                      <span className="font-bold text-red-600">
-                        GHS {balance.toLocaleString()}
-                      </span>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span>Status</span>
-                      <span className="font-bold text-[#d9a514] capitalize">
-                        {feeStatus}
-                      </span>
-                    </div>
+                    <Row label="Total Fees" value={`GHS ${totalFee.toLocaleString()}`} />
+                    <Row
+                      label="Amount Paid"
+                      value={`GHS ${paidAmount.toLocaleString()}`}
+                      green
+                    />
+                    <Row
+                      label="Balance"
+                      value={`GHS ${balance.toLocaleString()}`}
+                      red
+                    />
+                    <Row label="Status" value={feeStatus} gold />
 
                     <p className="mt-6 text-sm text-[#64748b]">
                       Fees are updated by the school accountant. Online payment
@@ -169,29 +161,34 @@ export default function Portal() {
               </div>
 
               <div className="bg-white rounded-[2rem] p-8 shadow border border-gray-100">
-                <h3 className="text-2xl font-black">Latest Results</h3>
+                <h3 className="text-2xl font-black">Published Results</h3>
 
-                <div className="mt-6 space-y-4">
-                  <div className="flex justify-between border-b pb-3">
-                    <span>English</span>
-                    <span className="font-bold">Coming Soon</span>
+                {results.length > 0 ? (
+                  <div className="mt-6 space-y-4">
+                    {results.map((item) => (
+                      <div key={item.id} className="border-b pb-4">
+                        <div className="flex justify-between gap-4">
+                          <span className="font-bold">{item.subject}</span>
+                          <span className="font-black">
+                            {item.score}% • Grade {item.grade}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-sm text-[#64748b]">
+                          {item.term} • {item.result_type}
+                        </p>
+                        {item.teacher_remarks && (
+                          <p className="mt-2 text-sm text-[#64748b]">
+                            Remark: {item.teacher_remarks}
+                          </p>
+                        )}
+                      </div>
+                    ))}
                   </div>
-
-                  <div className="flex justify-between border-b pb-3">
-                    <span>Mathematics</span>
-                    <span className="font-bold">Coming Soon</span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span>Science</span>
-                    <span className="font-bold">Coming Soon</span>
-                  </div>
-                </div>
-
-                <p className="mt-6 text-sm text-[#64748b]">
-                  Exam and class test results will appear here after teachers or
-                  admin upload them.
-                </p>
+                ) : (
+                  <p className="mt-6 text-[#64748b]">
+                    No published results available yet.
+                  </p>
+                )}
               </div>
             </div>
 
@@ -241,31 +238,78 @@ export default function Portal() {
               )}
             </div>
 
+            <div className="mt-8 bg-white rounded-[2rem] p-8 shadow border border-gray-100">
+              <h3 className="text-2xl font-black">Attendance History</h3>
+
+              {attendance.length > 0 ? (
+                <div className="mt-6 space-y-3">
+                  {attendance.map((item) => (
+                    <div key={item.id} className="flex justify-between border-b pb-3">
+                      <span>{item.attendance_date}</span>
+                      <span className="font-bold capitalize">{item.status}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-6 text-[#64748b]">
+                  No attendance record available yet.
+                </p>
+              )}
+            </div>
+
             <div className="mt-8 grid gap-6 md:grid-cols-3">
-              <div className="bg-white rounded-3xl p-6 shadow border border-gray-100">
-                <h3 className="text-xl font-black">Announcements</h3>
-                <p className="mt-3 text-[#64748b]">
-                  School announcements will appear here.
-                </p>
-              </div>
-
-              <div className="bg-white rounded-3xl p-6 shadow border border-gray-100">
-                <h3 className="text-xl font-black">Academic Calendar</h3>
-                <p className="mt-3 text-[#64748b]">
-                  Term dates and school events will appear here.
-                </p>
-              </div>
-
-              <div className="bg-white rounded-3xl p-6 shadow border border-gray-100">
-                <h3 className="text-xl font-black">Report Card</h3>
-                <p className="mt-3 text-[#64748b]">
-                  Downloadable report cards will be added later.
-                </p>
-              </div>
+              <InfoCard title="Announcements" text="School announcements will appear here." />
+              <InfoCard title="Academic Calendar" text="Term dates and school events will appear here." />
+              <InfoCard title="Report Card" text="Downloadable report cards will be added later." />
             </div>
           </>
         )}
       </section>
     </main>
+  );
+}
+
+function Stat({ title, value, highlight }) {
+  return (
+    <div className="bg-white rounded-3xl p-6 shadow border border-gray-100">
+      <p className="text-[#64748b] font-bold">{title}</p>
+      <h3
+        className={`mt-3 text-2xl font-black ${
+          highlight ? "text-[#d9a514] capitalize" : ""
+        }`}
+      >
+        {value}
+      </h3>
+    </div>
+  );
+}
+
+function Row({ label, value, green, red, gold }) {
+  return (
+    <div className="flex justify-between border-b pb-3">
+      <span>{label}</span>
+      <span
+        className={`font-bold ${
+          green
+            ? "text-green-600"
+            : red
+            ? "text-red-600"
+            : gold
+            ? "text-[#d9a514] capitalize"
+            : ""
+        }`}
+      >
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function InfoCard({ title, text }) {
+  return (
+    <div className="bg-white rounded-3xl p-6 shadow border border-gray-100">
+      <h3 className="text-xl font-black">{title}</h3>
+      <p className="mt-3 text-[#64748b]">{text}</p>
+    </div>
   );
 }

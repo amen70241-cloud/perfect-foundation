@@ -336,10 +336,15 @@ async function promoteClass(currentClass) {
             <p className="text-gray-300">Perfect Foundation Academy</p>
           </div>
 
-          <a href="/" className="text-[#f4b41a] font-bold">
-            Home
-          </a>
-        </div>
+          <div className="flex gap-4">
+  <a href="/website-manager" className="text-[#f4b41a] font-bold">
+    Website Manager
+  </a>
+
+  <a href="/" className="text-[#f4b41a] font-bold">
+    Home
+  </a>
+</div>
       </header>
 
       <section className="max-w-6xl mx-auto px-6 py-10">

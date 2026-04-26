@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabase";
 
 export default function Login() {
   const [email, setEmail] = useState("admin@pfa.com");
-  const [password, setPassword] = useState("Admin12345");
+  const [password, setPassword] = useState("");
   const [loginType, setLoginType] = useState("admin");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -13,10 +13,12 @@ export default function Login() {
 
     if (type === "admin") {
       setEmail("admin@pfa.com");
+    } else if (type === "student") {
+      setEmail("student@pfa.com");
     } else if (type === "accountant") {
       setEmail("accountant@pfa.com");
-    } else {
-      setEmail("student@pfa.com");
+    } else if (type === "teacher") {
+      setEmail("teacher@pfa.com");
     }
 
     setPassword("");
@@ -52,14 +54,14 @@ export default function Login() {
     }
 
     if (profileData.role === "admin") {
-  window.location.href = "/admin";
-} else if (profileData.role === "accountant") {
-  window.location.href = "/accountant";
-} else if (profileData.role === "teacher") {
-  window.location.href = "/teacher";
-} else {
-  window.location.href = "/portal";
-}
+      window.location.href = "/admin";
+    } else if (profileData.role === "accountant") {
+      window.location.href = "/accountant";
+    } else if (profileData.role === "teacher") {
+      window.location.href = "/teacher";
+    } else {
+      window.location.href = "/portal";
+    }
   }
 
   return (
@@ -117,6 +119,18 @@ export default function Login() {
             }`}
           >
             Accountant Login
+          </button>
+
+          <button
+            type="button"
+            onClick={() => chooseLogin("teacher")}
+            className={`py-4 rounded-2xl font-black border ${
+              loginType === "teacher"
+                ? "bg-[#f4b41a] text-[#0f172a] border-[#f4b41a]"
+                : "bg-white text-[#0f172a] border-gray-200"
+            }`}
+          >
+            Teacher Login
           </button>
         </div>
 

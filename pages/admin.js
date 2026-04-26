@@ -1,50 +1,251 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
+const classes = [
+  "Creche",
+  "Nursery",
+  "Kindergarten",
+  "Primary 1",
+  "Primary 2",
+  "Primary 3",
+  "Primary 4",
+  "Primary 5",
+  "Primary 6",
+  "JHS 1",
+  "JHS 2",
+  "JHS 3",
+];
+
 export default function Admin() {
   const [students, setStudents] = useState([]);
-  const [teachers, setTeachers] = useState(0);
-  const [fullName, setFullName] = useState("");
-  const [className, setClassName] = useState("");
+  const [staff, setStaff] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
+  const [enquiries, setEnquiries] = useState([]);
+  const [gallery, setGallery] = useState([]);
+  const [calendar, setCalendar] = useState([]);
+
+  const [studentName, setStudentName] = useState("");
+  const [studentClass, setStudentClass] = useState("");
+  const [editingStudentId, setEditingStudentId] = useState(null);
+
+  const [staffName, setStaffName] = useState("");
+  const [staffRole, setStaffRole] = useState("");
+  const [staffClass, setStaffClass] = useState("");
+  const [staffPhone, setStaffPhone] = useState("");
+  const [editingStaffId, setEditingStaffId] = useState(null);
+
+  const [announcementTitle, setAnnouncementTitle] = useState("");
+  const [announcementMessage, setAnnouncementMessage] = useState("");
+
+  const [galleryTitle, setGalleryTitle] = useState("");
+  const [galleryUrl, setGalleryUrl] = useState("");
+
+  const [calendarTitle, setCalendarTitle] = useState("");
+  const [calendarDate, setCalendarDate] = useState("");
+  const [calendarDescription, setCalendarDescription] = useState("");
+
+  const [search, setSearch] = useState("");
+  const [classFilter, setClassFilter] = useState("all");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetchData();
+    loadData();
   }, []);
 
-  async function fetchData() {
+  async function loadData() {
     const { data: studentsData } = await supabase
       .from("students")
       .select("*")
+      .order("class", { ascending: true });
+
+    const { data: staffData } = await supabase
+      .from("staff")
+      .select("*")
       .order("created_at", { ascending: false });
 
-    const { data: teachersData } = await supabase.from("teachers").select("*");
+    const { data: announcementsData } = await supabase
+      .from("announcements")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    const { data: enquiriesData } = await supabase
+      .from("admissions_enquiries")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    const { data: galleryData } = await supabase
+      .from("gallery_images")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    const { data: calendarData } = await supabase
+      .from("academic_calendar")
+      .select("*")
+      .order("event_date", { ascending: true });
 
     setStudents(studentsData || []);
-    setTeachers(teachersData?.length || 0);
+    setStaff(staffData || []);
+    setAnnouncements(announcementsData || []);
+    setEnquiries(enquiriesData || []);
+    setGallery(galleryData || []);
+    setCalendar(calendarData || []);
   }
 
-  async function addStudent(e) {
+  async function saveStudent(e) {
     e.preventDefault();
     setMessage("");
 
-    const { error } = await supabase.from("students").insert([
+    if (editingStudentId) {
+      const { error } = await supabase
+        .from("students")
+        .update({
+          full_name: studentName,
+          class: studentClass,
+        })
+        .eq("id", editingStudentId);
+
+      if (error) return setMessage(error.message);
+      setMessage("Student updated successfully.");
+    } else {
+      const { error } = await supabase.from("students").insert([
+        {
+          full_name: studentName,
+          class: studentClass,
+        },
+      ]);
+
+      if (error) return setMessage(error.message);
+      setMessage("Student added successfully.");
+    }
+
+    setStudentName("");
+    setStudentClass("");
+    setEditingStudentId(null);
+    loadData();
+  }
+
+  function editStudent(student) {
+    setEditingStudentId(student.id);
+    setStudentName(student.full_name);
+    setStudentClass(student.class);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function saveStaff(e) {
+    e.preventDefault();
+    setMessage("");
+
+    const payload = {
+      full_name: staffName,
+      role: staffRole,
+      assigned_class: staffClass,
+      phone: staffPhone,
+    };
+
+    if (editingStaffId) {
+      const { error } = await supabase
+        .from("staff")
+        .update(payload)
+        .eq("id", editingStaffId);
+
+      if (error) return setMessage(error.message);
+      setMessage("Staff updated successfully.");
+    } else {
+      const { error } = await supabase.from("staff").insert([payload]);
+
+      if (error) return setMessage(error.message);
+      setMessage("Staff added successfully.");
+    }
+
+    setStaffName("");
+    setStaffRole("");
+    setStaffClass("");
+    setStaffPhone("");
+    setEditingStaffId(null);
+    loadData();
+  }
+
+  function editStaff(member) {
+    setEditingStaffId(member.id);
+    setStaffName(member.full_name);
+    setStaffRole(member.role || "");
+    setStaffClass(member.assigned_class || "");
+    setStaffPhone(member.phone || "");
+  }
+
+  async function createAnnouncement(e) {
+    e.preventDefault();
+
+    const { error } = await supabase.from("announcements").insert([
       {
-        full_name: fullName,
-        class: className,
+        title: announcementTitle,
+        message: announcementMessage,
       },
     ]);
 
-    if (error) {
-      setMessage(error.message);
-      return;
-    }
+    if (error) return setMessage(error.message);
 
-    setFullName("");
-    setClassName("");
-    setMessage("Student added successfully.");
-    fetchData();
+    setAnnouncementTitle("");
+    setAnnouncementMessage("");
+    setMessage("Announcement created.");
+    loadData();
   }
+
+  async function addGalleryImage(e) {
+    e.preventDefault();
+
+    const { error } = await supabase.from("gallery_images").insert([
+      {
+        title: galleryTitle,
+        image_url: galleryUrl,
+      },
+    ]);
+
+    if (error) return setMessage(error.message);
+
+    setGalleryTitle("");
+    setGalleryUrl("");
+    setMessage("Gallery image added.");
+    loadData();
+  }
+
+  async function addCalendarEvent(e) {
+    e.preventDefault();
+
+    const { error } = await supabase.from("academic_calendar").insert([
+      {
+        title: calendarTitle,
+        event_date: calendarDate,
+        description: calendarDescription,
+      },
+    ]);
+
+    if (error) return setMessage(error.message);
+
+    setCalendarTitle("");
+    setCalendarDate("");
+    setCalendarDescription("");
+    setMessage("Calendar event added.");
+    loadData();
+  }
+
+  const filteredStudents = students.filter((student) => {
+    const matchesSearch = student.full_name
+      ?.toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesClass =
+      classFilter === "all" || student.class === classFilter;
+
+    return matchesSearch && matchesClass;
+  });
+
+  const groupedStudents = classes
+    .map((className) => ({
+      className,
+      students: filteredStudents.filter((s) => s.class === className),
+    }))
+    .filter((group) => group.students.length > 0);
 
   return (
     <main className="min-h-screen bg-[#f8f6ef] text-[#0f172a]">
@@ -62,98 +263,376 @@ export default function Admin() {
       </header>
 
       <section className="max-w-6xl mx-auto px-6 py-10">
-        <div className="grid gap-6 md:grid-cols-4">
-          <div className="bg-white rounded-3xl p-6 shadow border">
-            <p className="text-[#64748b] font-bold">Students</p>
-            <h3 className="mt-3 text-3xl font-black">{students.length}</h3>
+        {message && (
+          <div className="mb-6 bg-white border rounded-2xl p-4 font-bold">
+            {message}
+          </div>
+        )}
+
+        <div className="grid gap-6 md:grid-cols-5">
+          <Stat title="Students" value={students.length} />
+          <Stat title="Staff" value={staff.length} />
+          <Stat title="Classes" value={classes.length} />
+          <Stat title="Announcements" value={announcements.length} />
+          <Stat title="Enquiries" value={enquiries.length} />
+        </div>
+
+        <div className="mt-10 grid gap-8 md:grid-cols-2">
+          <form
+            onSubmit={saveStudent}
+            className="bg-white rounded-[2rem] p-8 shadow border"
+          >
+            <h2 className="text-2xl font-black">
+              {editingStudentId ? "Edit Student" : "Add Student"}
+            </h2>
+
+            <div className="mt-6 grid gap-4">
+              <input
+                value={studentName}
+                onChange={(e) => setStudentName(e.target.value)}
+                placeholder="Student full name"
+                required
+                className="input"
+              />
+
+              <select
+                value={studentClass}
+                onChange={(e) => setStudentClass(e.target.value)}
+                required
+                className="input"
+              >
+                <option value="">Assign student to class</option>
+                {classes.map((c) => (
+                  <option key={c}>{c}</option>
+                ))}
+              </select>
+
+              <button className="btn-gold">
+                {editingStudentId ? "Update Student" : "Add Student"}
+              </button>
+            </div>
+          </form>
+
+          <form
+            onSubmit={saveStaff}
+            className="bg-white rounded-[2rem] p-8 shadow border"
+          >
+            <h2 className="text-2xl font-black">
+              {editingStaffId ? "Edit Staff" : "Add Staff"}
+            </h2>
+
+            <div className="mt-6 grid gap-4">
+              <input
+                value={staffName}
+                onChange={(e) => setStaffName(e.target.value)}
+                placeholder="Staff full name"
+                required
+                className="input"
+              />
+
+              <select
+                value={staffRole}
+                onChange={(e) => setStaffRole(e.target.value)}
+                required
+                className="input"
+              >
+                <option value="">Select staff role</option>
+                <option>Admin</option>
+                <option>Teacher</option>
+                <option>Accountant</option>
+                <option>Headteacher</option>
+              </select>
+
+              <select
+                value={staffClass}
+                onChange={(e) => setStaffClass(e.target.value)}
+                className="input"
+              >
+                <option value="">Assign class</option>
+                {classes.map((c) => (
+                  <option key={c}>{c}</option>
+                ))}
+              </select>
+
+              <input
+                value={staffPhone}
+                onChange={(e) => setStaffPhone(e.target.value)}
+                placeholder="Phone number"
+                className="input"
+              />
+
+              <button className="btn-gold">
+                {editingStaffId ? "Update Staff" : "Add Staff"}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div className="mt-10 bg-white rounded-[2rem] p-8 shadow border">
+          <h2 className="text-2xl font-black">Students by Class</h2>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search student name"
+              className="input"
+            />
+
+            <select
+              value={classFilter}
+              onChange={(e) => setClassFilter(e.target.value)}
+              className="input"
+            >
+              <option value="all">All Classes</option>
+              {classes.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+            </select>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 shadow border">
-            <p className="text-[#64748b] font-bold">Teachers</p>
-            <h3 className="mt-3 text-3xl font-black">{teachers}</h3>
-          </div>
+          <div className="mt-8 grid gap-6">
+            {groupedStudents.map((group) => (
+              <div key={group.className} className="border rounded-3xl p-6">
+                <h3 className="text-xl font-black text-[#d9a514]">
+                  {group.className}
+                </h3>
 
-          <div className="bg-white rounded-3xl p-6 shadow border">
-            <p className="text-[#64748b] font-bold">Classes</p>
-            <h3 className="mt-3 text-3xl font-black">14</h3>
-          </div>
+                <div className="mt-4 space-y-3">
+                  {group.students.map((student) => (
+                    <div
+                      key={student.id}
+                      className="flex justify-between items-center border-b pb-3"
+                    >
+                      <span className="font-bold">{student.full_name}</span>
+                      <button
+                        onClick={() => editStudent(student)}
+                        className="text-sm font-bold text-[#0f172a]"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
 
-          <div className="bg-white rounded-3xl p-6 shadow border">
-            <p className="text-[#64748b] font-bold">Admissions</p>
-            <h3 className="mt-3 text-3xl font-black">--</h3>
+            {groupedStudents.length === 0 && (
+              <p className="text-[#64748b]">No students found.</p>
+            )}
           </div>
         </div>
 
         <div className="mt-10 grid gap-8 md:grid-cols-2">
           <form
-            onSubmit={addStudent}
-            className="bg-white rounded-[2rem] p-8 shadow border border-gray-100"
+            onSubmit={createAnnouncement}
+            className="bg-white rounded-[2rem] p-8 shadow border"
           >
-            <h2 className="text-2xl font-black">Add Student</h2>
+            <h2 className="text-2xl font-black">Create Announcement</h2>
+
+            <div className="mt-6 grid gap-4">
+              <input
+                value={announcementTitle}
+                onChange={(e) => setAnnouncementTitle(e.target.value)}
+                placeholder="Announcement title"
+                required
+                className="input"
+              />
+
+              <textarea
+                value={announcementMessage}
+                onChange={(e) => setAnnouncementMessage(e.target.value)}
+                placeholder="Announcement message"
+                required
+                rows="4"
+                className="input"
+              />
+
+              <button className="btn-dark">Create Announcement</button>
+            </div>
+          </form>
+
+          <form
+            onSubmit={addGalleryImage}
+            className="bg-white rounded-[2rem] p-8 shadow border"
+          >
+            <h2 className="text-2xl font-black">Upload Gallery Photo</h2>
             <p className="mt-2 text-[#64748b]">
-              Register a new student into the system.
+              Paste an image URL for now. Real file upload can come later.
             </p>
 
             <div className="mt-6 grid gap-4">
               <input
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                value={galleryTitle}
+                onChange={(e) => setGalleryTitle(e.target.value)}
+                placeholder="Photo title"
                 required
-                placeholder="Student full name"
-                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+                className="input"
               />
 
-              <select
-                value={className}
-                onChange={(e) => setClassName(e.target.value)}
+              <input
+                value={galleryUrl}
+                onChange={(e) => setGalleryUrl(e.target.value)}
+                placeholder="Image URL"
                 required
-                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
-              >
-                <option value="">Select class</option>
-                <option>Creche</option>
-                <option>Nursery</option>
-                <option>Kindergarten</option>
-                <option>Primary 1</option>
-                <option>Primary 2</option>
-                <option>Primary 3</option>
-                <option>Primary 4</option>
-                <option>Primary 5</option>
-                <option>Primary 6</option>
-                <option>JHS 1</option>
-                <option>JHS 2</option>
-                <option>JHS 3</option>
-              </select>
+                className="input"
+              />
 
-              <button
-                type="submit"
-                className="bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black"
-              >
-                Add Student
-              </button>
+              <button className="btn-dark">Add Gallery Photo</button>
+            </div>
+          </form>
+        </div>
 
-              {message && (
-                <p className="text-sm font-bold text-[#0f172a]">{message}</p>
-              )}
+        <div className="mt-10 grid gap-8 md:grid-cols-2">
+          <form
+            onSubmit={addCalendarEvent}
+            className="bg-white rounded-[2rem] p-8 shadow border"
+          >
+            <h2 className="text-2xl font-black">Upload Academic Calendar</h2>
+
+            <div className="mt-6 grid gap-4">
+              <input
+                value={calendarTitle}
+                onChange={(e) => setCalendarTitle(e.target.value)}
+                placeholder="Event title"
+                required
+                className="input"
+              />
+
+              <input
+                type="date"
+                value={calendarDate}
+                onChange={(e) => setCalendarDate(e.target.value)}
+                required
+                className="input"
+              />
+
+              <textarea
+                value={calendarDescription}
+                onChange={(e) => setCalendarDescription(e.target.value)}
+                placeholder="Description"
+                rows="4"
+                className="input"
+              />
+
+              <button className="btn-dark">Add Calendar Event</button>
             </div>
           </form>
 
-          <div className="bg-white rounded-[2rem] p-8 shadow border border-gray-100">
-            <h2 className="text-2xl font-black">Student List</h2>
+          <div className="bg-white rounded-[2rem] p-8 shadow border">
+            <h2 className="text-2xl font-black">Admissions Enquiries</h2>
 
-            <div className="mt-6 space-y-3">
-              {students.map((student) => (
-                <div
-                  key={student.id}
-                  className="flex justify-between border-b pb-3"
-                >
-                  <span className="font-bold">{student.full_name}</span>
-                  <span className="text-[#64748b]">{student.class}</span>
+            <div className="mt-6 space-y-4">
+              {enquiries.length === 0 && (
+                <p className="text-[#64748b]">No enquiries yet.</p>
+              )}
+
+              {enquiries.map((item) => (
+                <div key={item.id} className="border-b pb-4">
+                  <p className="font-black">{item.parent_name}</p>
+                  <p className="text-sm text-[#64748b]">
+                    {item.child_name} • {item.desired_class}
+                  </p>
+                  <p className="text-sm">{item.phone}</p>
                 </div>
               ))}
             </div>
           </div>
         </div>
+
+        <div className="mt-10 grid gap-8 md:grid-cols-3">
+          <List title="Staff List" items={staff} editFn={editStaff} />
+          <SimpleList title="Announcements" items={announcements} />
+          <SimpleList title="Calendar Events" items={calendar} />
+        </div>
       </section>
+
+      <style jsx>{`
+        .input {
+          width: 100%;
+          border: 1px solid #e5e7eb;
+          border-radius: 1rem;
+          padding: 1rem;
+          outline: none;
+        }
+
+        .input:focus {
+          border-color: #f4b41a;
+        }
+
+        .btn-gold {
+          background: #f4b41a;
+          color: #0f172a;
+          padding: 1rem;
+          border-radius: 1rem;
+          font-weight: 900;
+        }
+
+        .btn-dark {
+          background: #0f172a;
+          color: white;
+          padding: 1rem;
+          border-radius: 1rem;
+          font-weight: 900;
+        }
+      `}</style>
     </main>
+  );
+}
+
+function Stat({ title, value }) {
+  return (
+    <div className="bg-white rounded-3xl p-6 shadow border">
+      <p className="text-[#64748b] font-bold">{title}</p>
+      <h3 className="mt-3 text-3xl font-black">{value}</h3>
+    </div>
+  );
+}
+
+function List({ title, items, editFn }) {
+  return (
+    <div className="bg-white rounded-[2rem] p-6 shadow border">
+      <h3 className="text-xl font-black">{title}</h3>
+
+      <div className="mt-5 space-y-3">
+        {items.length === 0 && <p className="text-[#64748b]">No records yet.</p>}
+
+        {items.map((item) => (
+          <div key={item.id} className="border-b pb-3">
+            <p className="font-bold">{item.full_name}</p>
+            <p className="text-sm text-[#64748b]">
+              {item.role} {item.assigned_class ? `• ${item.assigned_class}` : ""}
+            </p>
+            <button
+              onClick={() => editFn(item)}
+              className="mt-2 text-sm font-bold text-[#d9a514]"
+            >
+              Edit
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SimpleList({ title, items }) {
+  return (
+    <div className="bg-white rounded-[2rem] p-6 shadow border">
+      <h3 className="text-xl font-black">{title}</h3>
+
+      <div className="mt-5 space-y-3">
+        {items.length === 0 && <p className="text-[#64748b]">No records yet.</p>}
+
+        {items.map((item) => (
+          <div key={item.id} className="border-b pb-3">
+            <p className="font-bold">{item.title}</p>
+            <p className="text-sm text-[#64748b]">
+              {item.message || item.description || item.event_date}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

@@ -6,6 +6,7 @@ export default function Portal() {
   const [fees, setFees] = useState([]);
   const [results, setResults] = useState([]);
   const [attendance, setAttendance] = useState([]);
+  const [selectedTerm, setSelectedTerm] = useState("Term 1");
   const [message, setMessage] = useState("Loading portal...");
 
   useEffect(() => {
@@ -59,6 +60,16 @@ export default function Portal() {
     setMessage("");
   }
 
+  const termResults = results.filter((item) => item.term === selectedTerm);
+
+  const totalScore = termResults.reduce(
+    (sum, item) => sum + Number(item.score || 0),
+    0
+  );
+
+  const averageScore =
+    termResults.length > 0 ? Math.round(totalScore / termResults.length) : null;
+
   const latestFee = fees?.[0] || null;
 
   const totalFee = latestFee ? Number(latestFee.total_fee || 0) : 0;
@@ -66,13 +77,14 @@ export default function Portal() {
   const balance = latestFee ? Number(latestFee.balance || 0) : 0;
   const feeStatus = latestFee?.status || "No Record";
 
-  const averageScore =
-    results.length > 0
-      ? Math.round(
-          results.reduce((sum, item) => sum + Number(item.score || 0), 0) /
-            results.length
-        )
-      : null;
+  function getPerformanceRemark(average) {
+    if (!average) return "No published result yet.";
+    if (average >= 80) return "Excellent performance. Keep it up.";
+    if (average >= 70) return "Very good performance. Continue working hard.";
+    if (average >= 60) return "Good performance with room for improvement.";
+    if (average >= 50) return "Fair performance. More effort is needed.";
+    return "Needs serious improvement and support.";
+  }
 
   return (
     <main className="min-h-screen bg-[#f8f6ef] text-[#0f172a]">
@@ -135,7 +147,10 @@ export default function Portal() {
 
                 {latestFee ? (
                   <div className="mt-6 space-y-4 text-lg">
-                    <Row label="Total Fees" value={`GHS ${totalFee.toLocaleString()}`} />
+                    <Row
+                      label="Total Fees"
+                      value={`GHS ${totalFee.toLocaleString()}`}
+                    />
                     <Row
                       label="Amount Paid"
                       value={`GHS ${paidAmount.toLocaleString()}`}
@@ -161,35 +176,110 @@ export default function Portal() {
               </div>
 
               <div className="bg-white rounded-[2rem] p-8 shadow border border-gray-100">
-                <h3 className="text-2xl font-black">Published Results</h3>
-
-                {results.length > 0 ? (
-                  <div className="mt-6 space-y-4">
-                    {results.map((item) => (
-                      <div key={item.id} className="border-b pb-4">
-                        <div className="flex justify-between gap-4">
-                          <span className="font-bold">{item.subject}</span>
-                          <span className="font-black">
-                            {item.score}% • Grade {item.grade}
-                          </span>
-                        </div>
-                        <p className="mt-1 text-sm text-[#64748b]">
-                          {item.term} • {item.result_type}
-                        </p>
-                        {item.teacher_remarks && (
-                          <p className="mt-2 text-sm text-[#64748b]">
-                            Remark: {item.teacher_remarks}
-                          </p>
-                        )}
-                      </div>
-                    ))}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-2xl font-black">Results Summary</h3>
+                    <p className="mt-2 text-[#64748b]">
+                      Published results only.
+                    </p>
                   </div>
-                ) : (
-                  <p className="mt-6 text-[#64748b]">
-                    No published results available yet.
-                  </p>
-                )}
+
+                  <select
+                    value={selectedTerm}
+                    onChange={(e) => setSelectedTerm(e.target.value)}
+                    className="border border-gray-200 rounded-2xl p-3 outline-none focus:border-[#f4b41a]"
+                  >
+                    <option>Term 1</option>
+                    <option>Term 2</option>
+                    <option>Term 3</option>
+                  </select>
+                </div>
+
+                <div className="mt-6 grid grid-cols-3 gap-4">
+                  <MiniStat title="Subjects" value={termResults.length} />
+                  <MiniStat title="Total" value={totalScore} />
+                  <MiniStat
+                    title="Average"
+                    value={averageScore ? `${averageScore}%` : "-"}
+                  />
+                </div>
+
+                <p className="mt-6 text-[#64748b]">
+                  {getPerformanceRemark(averageScore)}
+                </p>
               </div>
+            </div>
+
+            <div className="mt-8 bg-white rounded-[2rem] p-8 shadow border border-gray-100">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-3xl font-black">
+                    Report Card — {selectedTerm}
+                  </h3>
+                  <p className="mt-2 text-[#64748b]">
+                    {student.full_name} • {student.class}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => window.print()}
+                  className="bg-[#0f172a] text-white px-6 py-4 rounded-2xl font-black"
+                >
+                  Print Report
+                </button>
+              </div>
+
+              {termResults.length > 0 ? (
+                <div className="mt-8 overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="border-b text-[#64748b]">
+                        <th className="py-4 pr-4">Subject</th>
+                        <th className="py-4 pr-4">Type</th>
+                        <th className="py-4 pr-4">Score</th>
+                        <th className="py-4 pr-4">Grade</th>
+                        <th className="py-4 pr-4">Teacher Remarks</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {termResults.map((item) => (
+                        <tr key={item.id} className="border-b">
+                          <td className="py-4 pr-4 font-bold">
+                            {item.subject}
+                          </td>
+                          <td className="py-4 pr-4">
+                            {item.result_type || "Exam"}
+                          </td>
+                          <td className="py-4 pr-4 font-black">
+                            {item.score}%
+                          </td>
+                          <td className="py-4 pr-4">
+                            <span className="bg-[#f4b41a]/20 text-[#9a6b00] px-4 py-2 rounded-full font-bold">
+                              {item.grade}
+                            </span>
+                          </td>
+                          <td className="py-4 pr-4 text-[#64748b]">
+                            {item.teacher_remarks || "-"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <div className="mt-8 bg-[#f8f6ef] rounded-3xl p-6">
+                    <h4 className="text-xl font-black">Overall Remark</h4>
+                    <p className="mt-3 text-[#64748b]">
+                      {getPerformanceRemark(averageScore)}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <p className="mt-8 text-[#64748b]">
+                  No published result available for {selectedTerm}.
+                </p>
+              )}
             </div>
 
             <div className="mt-8 bg-white rounded-[2rem] p-8 shadow border border-gray-100">
@@ -244,9 +334,14 @@ export default function Portal() {
               {attendance.length > 0 ? (
                 <div className="mt-6 space-y-3">
                   {attendance.map((item) => (
-                    <div key={item.id} className="flex justify-between border-b pb-3">
+                    <div
+                      key={item.id}
+                      className="flex justify-between border-b pb-3"
+                    >
                       <span>{item.attendance_date}</span>
-                      <span className="font-bold capitalize">{item.status}</span>
+                      <span className="font-bold capitalize">
+                        {item.status}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -258,9 +353,18 @@ export default function Portal() {
             </div>
 
             <div className="mt-8 grid gap-6 md:grid-cols-3">
-              <InfoCard title="Announcements" text="School announcements will appear here." />
-              <InfoCard title="Academic Calendar" text="Term dates and school events will appear here." />
-              <InfoCard title="Report Card" text="Downloadable report cards will be added later." />
+              <InfoCard
+                title="Announcements"
+                text="School announcements will appear here."
+              />
+              <InfoCard
+                title="Academic Calendar"
+                text="Term dates and school events will appear here."
+              />
+              <InfoCard
+                title="Downloads"
+                text="Report cards and school documents will be added later."
+              />
             </div>
           </>
         )}
@@ -280,6 +384,15 @@ function Stat({ title, value, highlight }) {
       >
         {value}
       </h3>
+    </div>
+  );
+}
+
+function MiniStat({ title, value }) {
+  return (
+    <div className="bg-[#f8f6ef] rounded-2xl p-4">
+      <p className="text-sm text-[#64748b] font-bold">{title}</p>
+      <h4 className="mt-2 text-xl font-black">{value}</h4>
     </div>
   );
 }

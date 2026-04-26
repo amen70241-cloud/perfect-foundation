@@ -52,12 +52,14 @@ export default function Login() {
     }
 
     if (profileData.role === "admin") {
-      window.location.href = "/admin";
-    } else if (profileData.role === "accountant") {
-      window.location.href = "/accountant";
-    } else {
-      window.location.href = "/portal";
-    }
+  window.location.href = "/admin";
+} else if (profileData.role === "accountant") {
+  window.location.href = "/accountant";
+} else if (profileData.role === "teacher") {
+  window.location.href = "/teacher";
+} else {
+  window.location.href = "/portal";
+}
   }
 
   return (

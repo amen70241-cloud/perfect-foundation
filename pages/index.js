@@ -401,55 +401,142 @@ async function loadWebsiteContent() {
           </div>
         </div>
       </section>
-      {/* GALLERY */}
-<section className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
-  <div className="max-w-6xl mx-auto text-center">
-    <p className="tracking-[0.4em] text-[#d9a514] font-bold">
-      LIFE AT PFA
-    </p>
+{/* DOWNLOADS */}
+<section id="downloads" className="scroll-fade px-6 py-24 bg-white">
+  <div className="max-w-6xl mx-auto">
+    <div className="text-center">
+      <p className="tracking-[0.4em] text-[#d9a514] font-bold">
+        DOWNLOADS
+      </p>
+      <h2 className="mt-6 text-4xl md:text-5xl font-extrabold text-[#0f172a]">
+        School documents and forms
+      </h2>
+      <p className="mt-4 text-gray-500 text-lg">
+        Access admission forms, prospectus, academic calendar and other documents.
+      </p>
+    </div>
 
-    <h2 className="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight text-[#0f172a]">
-      A glimpse into our classrooms & community.
-    </h2>
+    <div className="mt-14 grid gap-6 md:grid-cols-4">
+      {websiteDownloads.length === 0 && (
+        <p className="text-gray-500">No downloads added yet.</p>
+      )}
 
-    <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6">
-      {[
-        {
-          title: "Early Years",
-          img: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=800",
-        },
-        {
-          title: "Primary Class",
-          img: "https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800",
-        },
-        {
-          title: "Caring Teachers",
-          img: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800",
-        },
-        {
-          title: "Science Lab",
-          img: "https://images.unsplash.com/photo-1581093588401-fbb62a02f120?q=80&w=800",
-        },
-      ].map((item) => (
+      {websiteDownloads.map((item) => (
         <div
-          key={item.title}
-          className="relative overflow-hidden rounded-3xl shadow-lg group"
+          key={item.id}
+          className="bg-[#f8f6ef] rounded-3xl p-6 border border-gray-100 shadow"
         >
-          <img
-            src={item.img}
-            className="w-full h-56 object-cover group-hover:scale-110 transition duration-500"
-          />
+          <p className="text-[#d9a514] text-xs font-bold tracking-[0.2em] uppercase">
+            {item.category}
+          </p>
 
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] to-transparent opacity-80" />
-
-          <p className="absolute bottom-4 left-4 text-white text-xl font-bold">
+          <h3 className="mt-4 text-xl font-black text-[#0f172a]">
             {item.title}
+          </h3>
+
+          <a
+            href={item.file_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-block bg-[#f4b41a] text-[#0f172a] px-5 py-3 rounded-2xl font-black"
+          >
+            Download
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+      {/* GALLERY */}
+<section id="gallery" className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
+  <div className="max-w-6xl mx-auto">
+    <div className="text-center">
+      <p className="tracking-[0.4em] text-[#d9a514] font-bold">
+        LIFE AT PFA
+      </p>
+      <h2 className="mt-6 text-4xl md:text-5xl font-extrabold text-[#0f172a]">
+        A glimpse into our school community
+      </h2>
+    </div>
+
+    <div className="mt-14 grid gap-6 md:grid-cols-3">
+      {websiteEvents.length === 0 && (
+        <p className="text-gray-500">No gallery items added yet.</p>
+      )}
+
+      {websiteEvents.map((item) => (
+        <div
+          key={item.id}
+          className="bg-white rounded-[2rem] overflow-hidden shadow border border-gray-100"
+        >
+          {item.image_url ? (
+            <img
+              src={item.image_url}
+              alt={item.title}
+              className="w-full h-64 object-cover"
+            />
+          ) : (
+            <div className="w-full h-64 bg-[#0f172a] flex items-center justify-center text-[#f4b41a] text-5xl">
+              🎓
+            </div>
+          )}
+
+          <div className="p-6">
+            <p className="text-[#d9a514] text-xs font-bold tracking-[0.2em] uppercase">
+              {item.category}
+            </p>
+
+            <h3 className="mt-3 text-2xl font-black text-[#0f172a]">
+              {item.title}
+            </h3>
+
+            <p className="mt-3 text-gray-500">
+              {item.description}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+{/* EVENTS */}
+<section id="events" className="scroll-fade px-6 py-24 bg-white">
+  <div className="max-w-6xl mx-auto">
+    <div className="text-center">
+      <p className="tracking-[0.4em] text-[#d9a514] font-bold">
+        EVENTS
+      </p>
+      <h2 className="mt-6 text-4xl md:text-5xl font-extrabold text-[#0f172a]">
+        Latest school events
+      </h2>
+    </div>
+
+    <div className="mt-14 grid gap-6 md:grid-cols-2">
+      {websiteEvents.length === 0 && (
+        <p className="text-gray-500">No events added yet.</p>
+      )}
+
+      {websiteEvents.map((item) => (
+        <div
+          key={item.id}
+          className="bg-[#f8f6ef] rounded-[2rem] p-8 shadow border border-gray-100"
+        >
+          <p className="text-[#d9a514] font-bold">
+            {item.event_date || "Date coming soon"}
+          </p>
+
+          <h3 className="mt-3 text-2xl font-black text-[#0f172a]">
+            {item.title}
+          </h3>
+
+          <p className="mt-3 text-gray-500">
+            {item.description}
           </p>
         </div>
       ))}
     </div>
   </div>
-</section> 
+</section>
 {/* ADMISSIONS */}
 <section id="admissions" className="scroll-fade px-6 py-24 bg-[#0f172a] text-white">
   <div className="max-w-6xl mx-auto grid gap-12 md:grid-cols-2 items-start">

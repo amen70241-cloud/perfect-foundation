@@ -4,8 +4,24 @@ import { supabase } from "../lib/supabase";
 export default function Login() {
   const [email, setEmail] = useState("admin@pfa.com");
   const [password, setPassword] = useState("Admin12345");
+  const [loginType, setLoginType] = useState("admin");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  function chooseLogin(type) {
+    setLoginType(type);
+
+    if (type === "admin") {
+      setEmail("admin@pfa.com");
+    } else if (type === "accountant") {
+      setEmail("accountant@pfa.com");
+    } else {
+      setEmail("student@pfa.com");
+    }
+
+    setPassword("");
+    setMessage("");
+  }
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -25,27 +41,27 @@ export default function Login() {
     }
 
     const { data: profileData, error: profileError } = await supabase
-  .from("profiles")
-  .select("role")
-  .eq("id", data.user.id)
-  .single();
+      .from("profiles")
+      .select("role")
+      .eq("id", data.user.id)
+      .single();
 
-if (profileError) {
-  setMessage("Login successful, but no role profile found.");
-  return;
-}
+    if (profileError) {
+      setMessage("Login successful, but no role profile found.");
+      return;
+    }
 
-if (profileData.role === "admin") {
-  window.location.href = "/admin";
-} else if (profileData.role === "accountant") {
-  window.location.href = "/accountant";
-} else {
-  window.location.href = "/portal";
-}
+    if (profileData.role === "admin") {
+      window.location.href = "/admin";
+    } else if (profileData.role === "accountant") {
+      window.location.href = "/accountant";
+    } else {
+      window.location.href = "/portal";
+    }
   }
 
   return (
-    <main className="min-h-screen bg-[#0f172a] flex items-center justify-center px-6">
+    <main className="min-h-screen bg-[#0f172a] flex items-center justify-center px-6 py-10">
       <form
         onSubmit={handleLogin}
         className="bg-white rounded-[2rem] p-8 shadow-2xl w-full max-w-md"
@@ -60,8 +76,46 @@ if (profileData.role === "admin") {
           </h1>
 
           <p className="mt-3 text-[#64748b]">
-            Login to access your school portal.
+            Select your portal and login.
           </p>
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-3">
+          <button
+            type="button"
+            onClick={() => chooseLogin("admin")}
+            className={`py-4 rounded-2xl font-black border ${
+              loginType === "admin"
+                ? "bg-[#f4b41a] text-[#0f172a] border-[#f4b41a]"
+                : "bg-white text-[#0f172a] border-gray-200"
+            }`}
+          >
+            Admin Login
+          </button>
+
+          <button
+            type="button"
+            onClick={() => chooseLogin("student")}
+            className={`py-4 rounded-2xl font-black border ${
+              loginType === "student"
+                ? "bg-[#f4b41a] text-[#0f172a] border-[#f4b41a]"
+                : "bg-white text-[#0f172a] border-gray-200"
+            }`}
+          >
+            Student / Parent Login
+          </button>
+
+          <button
+            type="button"
+            onClick={() => chooseLogin("accountant")}
+            className={`py-4 rounded-2xl font-black border ${
+              loginType === "accountant"
+                ? "bg-[#f4b41a] text-[#0f172a] border-[#f4b41a]"
+                : "bg-white text-[#0f172a] border-gray-200"
+            }`}
+          >
+            Accountant Login
+          </button>
         </div>
 
         <div className="mt-8 grid gap-4">
@@ -86,13 +140,13 @@ if (profileData.role === "admin") {
           <button
             type="submit"
             disabled={loading}
-            className="text-center bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black shadow-lg disabled:opacity-60"
+            className="text-center bg-[#0f172a] text-white py-4 rounded-2xl font-black shadow-lg disabled:opacity-60"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "Logging in..." : "Continue"}
           </button>
 
           {message && (
-            <p className="text-center text-sm font-bold text-[#0f172a]">
+            <p className="text-center text-sm font-bold text-red-600">
               {message}
             </p>
           )}

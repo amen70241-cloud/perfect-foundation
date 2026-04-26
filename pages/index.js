@@ -36,40 +36,41 @@ export default function Home() {
 {menuOpen && (
   <div className="fixed top-24 right-6 z-50 bg-white rounded-3xl shadow-2xl border border-gray-100 p-6 w-72 fade-up">
     <div className="grid gap-4 text-lg font-bold text-[#0f172a]">
-  <a href="#programmes" onClick={() => setMenuOpen(false)}>
-    Programmes
-  </a>
+      <a href="#programmes" onClick={() => setMenuOpen(false)}>
+        Programmes
+      </a>
 
-  <a href="#admissions" onClick={() => setMenuOpen(false)}>
-    Admissions
-  </a>
+      <a href="#admissions" onClick={() => setMenuOpen(false)}>
+        Admissions
+      </a>
 
-  <a href="/downloads" onClick={() => setMenuOpen(false)}>
-    Downloads
-  </a>
+      <a href="/downloads" onClick={() => setMenuOpen(false)}>
+        Downloads
+      </a>
 
-  <a href="/gallery" onClick={() => setMenuOpen(false)}>
-    Gallery
-  </a>
+      <a href="/gallery" onClick={() => setMenuOpen(false)}>
+        Gallery
+      </a>
 
-  <a href="#contact" onClick={() => setMenuOpen(false)}>
-    Contact
-  </a>
+      <a href="#contact" onClick={() => setMenuOpen(false)}>
+        Contact
+      </a>
 
-  <a href="/login" onClick={() => setMenuOpen(false)}>
-    Portal Login
-  </a>
+      <a href="/login" onClick={() => setMenuOpen(false)}>
+        Portal Login
+      </a>
 
-  <a
-    href="https://wa.me/233244986221"
-    target="_blank"
-    rel="noopener noreferrer"
-    onClick={() => setMenuOpen(false)}
-    className="bg-[#20b957] text-white text-center py-3 rounded-2xl"
-  >
-    WhatsApp Us
-  </a>
-</div>
+      <a
+        href="https://wa.me/233244986221"
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => setMenuOpen(false)}
+        className="bg-[#20b957] text-white text-center py-3 rounded-2xl"
+      >
+        WhatsApp Us
+      </a>
+    </div>
+  </div>
 )}
       {/* HERO */}
       <section

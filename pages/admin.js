@@ -15,7 +15,20 @@ const classes = [
   "JHS 2",
   "JHS 3",
 ];
-
+const promotionMap = {
+  Creche: "Nursery",
+  Nursery: "Kindergarten",
+  Kindergarten: "Primary 1",
+  "Primary 1": "Primary 2",
+  "Primary 2": "Primary 3",
+  "Primary 3": "Primary 4",
+  "Primary 4": "Primary 5",
+  "Primary 5": "Primary 6",
+  "Primary 6": "JHS 1",
+  "JHS 1": "JHS 2",
+  "JHS 2": "JHS 3",
+  "JHS 3": "Completed",
+};
 export default function Admin() {
   const [students, setStudents] = useState([]);
   const [staff, setStaff] = useState([]);
@@ -137,7 +150,33 @@ export default function Admin() {
   setEditingStudentId(null);
   loadData();
 }
+async function promoteClass(currentClass) {
+  const nextClass = promotionMap[currentClass];
 
+  if (!nextClass) {
+    setMessage("No next class found.");
+    return;
+  }
+
+  const confirmPromotion = window.confirm(
+    `Promote all students from ${currentClass} to ${nextClass}?`
+  );
+
+  if (!confirmPromotion) return;
+
+  const { error } = await supabase
+    .from("students")
+    .update({ class: nextClass })
+    .eq("class", currentClass);
+
+  if (error) {
+    setMessage(error.message);
+    return;
+  }
+
+  setMessage(`Students promoted from ${currentClass} to ${nextClass}.`);
+  loadData();
+}
   function editStudent(student) {
     setEditingStudentId(student.id);
     setStudentName(student.full_name);
@@ -435,9 +474,19 @@ export default function Admin() {
           <div className="mt-8 grid gap-6">
             {groupedStudents.map((group) => (
               <div key={group.className} className="border rounded-3xl p-6">
-                <h3 className="text-xl font-black text-[#d9a514]">
-                  {group.className}
-                </h3>
+               <div className="flex justify-between items-center gap-4">
+  <h3 className="text-xl font-black text-[#d9a514]">
+    {group.className}
+  </h3>
+
+  <button
+    type="button"
+    onClick={() => promoteClass(group.className)}
+    className="bg-[#0f172a] text-white px-4 py-2 rounded-xl text-sm font-black"
+  >
+    Promote to {promotionMap[group.className] || "Next Class"}
+  </button>
+</div>
 
                 <div className="mt-4 space-y-3">
                   {group.students.map((student) => (

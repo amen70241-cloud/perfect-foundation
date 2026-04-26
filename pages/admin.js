@@ -1,20 +1,49 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "../lib/supabase";
 
 export default function Admin() {
-  const [students, setStudents] = useState(0);
+  const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState(0);
+  const [fullName, setFullName] = useState("");
+  const [className, setClassName] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchData();
   }, []);
 
   async function fetchData() {
-    const { data: studentsData } = await supabase.from("students").select("*");
+    const { data: studentsData } = await supabase
+      .from("students")
+      .select("*")
+      .order("created_at", { ascending: false });
+
     const { data: teachersData } = await supabase.from("teachers").select("*");
 
-    setStudents(studentsData?.length || 0);
+    setStudents(studentsData || []);
     setTeachers(teachersData?.length || 0);
+  }
+
+  async function addStudent(e) {
+    e.preventDefault();
+    setMessage("");
+
+    const { error } = await supabase.from("students").insert([
+      {
+        full_name: fullName,
+        class: className,
+      },
+    ]);
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setFullName("");
+    setClassName("");
+    setMessage("Student added successfully.");
+    fetchData();
   }
 
   return (
@@ -36,7 +65,7 @@ export default function Admin() {
         <div className="grid gap-6 md:grid-cols-4">
           <div className="bg-white rounded-3xl p-6 shadow border">
             <p className="text-[#64748b] font-bold">Students</p>
-            <h3 className="mt-3 text-3xl font-black">{students}</h3>
+            <h3 className="mt-3 text-3xl font-black">{students.length}</h3>
           </div>
 
           <div className="bg-white rounded-3xl p-6 shadow border">
@@ -46,7 +75,7 @@ export default function Admin() {
 
           <div className="bg-white rounded-3xl p-6 shadow border">
             <p className="text-[#64748b] font-bold">Classes</p>
-            <h3 className="mt-3 text-3xl font-black">--</h3>
+            <h3 className="mt-3 text-3xl font-black">14</h3>
           </div>
 
           <div className="bg-white rounded-3xl p-6 shadow border">
@@ -55,45 +84,76 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="mt-10">
-          <h2 className="text-2xl font-black mb-4">Recent Students</h2>
+        <div className="mt-10 grid gap-8 md:grid-cols-2">
+          <form
+            onSubmit={addStudent}
+            className="bg-white rounded-[2rem] p-8 shadow border border-gray-100"
+          >
+            <h2 className="text-2xl font-black">Add Student</h2>
+            <p className="mt-2 text-[#64748b]">
+              Register a new student into the system.
+            </p>
 
-          <div className="bg-white rounded-3xl p-6 shadow border">
-            <StudentList />
+            <div className="mt-6 grid gap-4">
+              <input
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                placeholder="Student full name"
+                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+              />
+
+              <select
+                value={className}
+                onChange={(e) => setClassName(e.target.value)}
+                required
+                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+              >
+                <option value="">Select class</option>
+                <option>Creche</option>
+                <option>Nursery</option>
+                <option>Kindergarten</option>
+                <option>Primary 1</option>
+                <option>Primary 2</option>
+                <option>Primary 3</option>
+                <option>Primary 4</option>
+                <option>Primary 5</option>
+                <option>Primary 6</option>
+                <option>JHS 1</option>
+                <option>JHS 2</option>
+                <option>JHS 3</option>
+              </select>
+
+              <button
+                type="submit"
+                className="bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black"
+              >
+                Add Student
+              </button>
+
+              {message && (
+                <p className="text-sm font-bold text-[#0f172a]">{message}</p>
+              )}
+            </div>
+          </form>
+
+          <div className="bg-white rounded-[2rem] p-8 shadow border border-gray-100">
+            <h2 className="text-2xl font-black">Student List</h2>
+
+            <div className="mt-6 space-y-3">
+              {students.map((student) => (
+                <div
+                  key={student.id}
+                  className="flex justify-between border-b pb-3"
+                >
+                  <span className="font-bold">{student.full_name}</span>
+                  <span className="text-[#64748b]">{student.class}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
     </main>
-  );
-}
-
-function StudentList() {
-  const [students, setStudents] = useState([]);
-
-  useEffect(() => {
-    loadStudents();
-  }, []);
-
-  async function loadStudents() {
-    const { data } = await supabase
-      .from("students")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    setStudents(data || []);
-  }
-
-  return (
-    <div className="space-y-3">
-      {students.map((s) => (
-        <div
-          key={s.id}
-          className="flex justify-between border-b py-2 text-sm"
-        >
-          <span className="font-bold">{s.full_name}</span>
-          <span className="text-gray-500">{s.class}</span>
-        </div>
-      ))}
-    </div>
   );
 }

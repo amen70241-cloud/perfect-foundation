@@ -264,7 +264,77 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
           <div className="mt-16 h-[1px] bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
         </div>
       </section>
+{/* CORE VALUES */}
+<section id="values" className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
+  <div className="max-w-6xl mx-auto text-center">
+    <p className="tracking-[0.4em] text-[#d9a514] font-bold">
+      OUR CORE VALUES
+    </p>
 
+    <div className="mt-14 grid grid-cols-2 md:grid-cols-3 gap-6">
+      {[
+        ["🎖️", "Excellence"],
+        ["🛡️", "Discipline"],
+        ["✝️", "Faith"],
+        ["✨", "Integrity"],
+        ["🤝", "Care"],
+        ["📖", "Academic Growth"],
+      ].map(([icon, title]) => (
+        <div
+          key={title}
+          className="bg-white rounded-[2rem] p-8 min-h-[190px] flex flex-col items-center justify-center shadow border border-gray-100"
+        >
+          <div className="w-20 h-20 rounded-3xl bg-green-50 flex items-center justify-center text-3xl">
+            {icon}
+          </div>
+          <h3 className="mt-6 text-2xl font-black text-[#0f172a]">
+            {title}
+          </h3>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+{/* WHY CHOOSE US */}
+<section id="why-choose-us" className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
+  <div className="max-w-6xl mx-auto">
+    <p className="tracking-[0.4em] text-[#d9a514] font-bold">
+      WHY CHOOSE US
+    </p>
+
+    <h2 className="mt-6 text-5xl md:text-6xl font-extrabold leading-tight text-[#0f172a] max-w-4xl">
+      Six reasons parents trust Perfect Foundation Academy.
+    </h2>
+
+    <div className="mt-14 grid gap-8 md:grid-cols-2">
+      {[
+        ["🏆", "Strong Academic Foundation", "A rigorous curriculum designed to give every child a firm head-start for life."],
+        ["👥", "Caring, Qualified Teachers", "Teachers who know each child by name and nurture their unique potential."],
+        ["🛡️", "Discipline & Character Formation", "We shape respectful, responsible and confident young Ghanaians."],
+        ["✝️", "Faith-Based Moral Values", "Christian principles woven into daily learning and assemblies."],
+        ["🏠", "Safe & Supportive Environment", "Secure facilities and a warm community where every child belongs."],
+        ["💬", "Parent-Friendly Communication", "We partner closely with parents — open, prompt and transparent."],
+      ].map(([icon, title, text]) => (
+        <div
+          key={title}
+          className="bg-white rounded-[2rem] p-10 shadow border border-gray-100"
+        >
+          <div className="w-20 h-20 rounded-3xl bg-[#f4b41a]/10 text-[#d9a514] flex items-center justify-center text-3xl">
+            {icon}
+          </div>
+
+          <h3 className="mt-10 text-3xl font-black text-[#0f172a]">
+            {title}
+          </h3>
+
+          <p className="mt-5 text-xl leading-9 text-[#64748b]">
+            {text}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
       {/* FOUNDER SECTION */}
       <section className="scroll-fade px-6 py-24 bg-[#0f172a] text-white">
         <div className="max-w-6xl mx-auto grid gap-14 md:grid-cols-2 items-center">
@@ -889,9 +959,21 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
   <p className="mt-3 text-[#f4b41a] tracking-[0.25em] text-sm">
     EXCELLENCE • DISCIPLINE • FAITH
   </p>
+         <div className="mt-10">
+  <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
+
+  <div className="space-y-3 text-gray-300 text-lg">
+    <a href="#about" className="block hover:text-[#f4b41a]">About</a>
+    <a href="#programmes" className="block hover:text-[#f4b41a]">Programmes</a>
+    <a href="#admissions" className="block hover:text-[#f4b41a]">Admissions</a>
+    <a href="#downloads" className="block hover:text-[#f4b41a]">Downloads</a>
+    <a href="#gallery" className="block hover:text-[#f4b41a]">Gallery</a>
+    <a href="#contact" className="block hover:text-[#f4b41a]">Contact</a>
+  </div>
+</div>
   <p className="mt-6 text-gray-400">
     © 2026 Perfect Foundation Academy. All rights reserved.
-  </p>
+  </p>      
 </footer>
     {/* FLOATING WHATSAPP */}
 <a

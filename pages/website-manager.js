@@ -6,18 +6,20 @@ export default function WebsiteManager() {
   const [events, setEvents] = useState([]);
   const [settings, setSettings] = useState(null);
   const [message, setMessage] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const [downloadTitle, setDownloadTitle] = useState("");
-  const [downloadUrl, setDownloadUrl] = useState("");
+  const [downloadFile, setDownloadFile] = useState(null);
   const [downloadCategory, setDownloadCategory] = useState("Admissions");
 
   const [eventTitle, setEventTitle] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [eventCategory, setEventCategory] = useState("General");
   const [eventDescription, setEventDescription] = useState("");
-  const [eventImageUrl, setEventImageUrl] = useState("");
+  const [eventImageFile, setEventImageFile] = useState(null);
 
   const [schoolMotto, setSchoolMotto] = useState("");
+  const [schoolLogoFile, setSchoolLogoFile] = useState(null);
   const [schoolLogoUrl, setSchoolLogoUrl] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState("");
@@ -59,80 +61,155 @@ export default function WebsiteManager() {
     }
   }
 
+  function makeFileName(file) {
+    const cleanName = file.name
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9.-]/g, "");
+
+    return `${Date.now()}-${cleanName}`;
+  }
+
+  async function uploadFile(bucket, file) {
+    if (!file) return null;
+
+    const fileName = makeFileName(file);
+
+    const { error } = await supabase.storage
+      .from(bucket)
+      .upload(fileName, file);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const { data } = supabase.storage.from(bucket).getPublicUrl(fileName);
+
+    return data.publicUrl;
+  }
+
   async function addDownload(e) {
     e.preventDefault();
     setMessage("");
 
-    const { error } = await supabase.from("website_downloads").insert([
-      {
-        title: downloadTitle,
-        file_url: downloadUrl,
-        category: downloadCategory,
-      },
-    ]);
+    if (!downloadFile) {
+      setMessage("Please choose a PDF/file to upload.");
+      return;
+    }
 
-    if (error) return setMessage(error.message);
+    try {
+      setUploading(true);
 
-    setDownloadTitle("");
-    setDownloadUrl("");
-    setDownloadCategory("Admissions");
-    setMessage("Download added successfully.");
-    loadData();
+      const fileUrl = await uploadFile("website-files", downloadFile);
+
+      const { error } = await supabase.from("website_downloads").insert([
+        {
+          title: downloadTitle,
+          file_url: fileUrl,
+          category: downloadCategory,
+        },
+      ]);
+
+      if (error) throw new Error(error.message);
+
+      setDownloadTitle("");
+      setDownloadFile(null);
+      setDownloadCategory("Admissions");
+      setMessage("Download uploaded successfully.");
+      loadData();
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function addEvent(e) {
     e.preventDefault();
     setMessage("");
 
-    const { error } = await supabase.from("website_events").insert([
-      {
-        title: eventTitle,
-        event_date: eventDate,
-        category: eventCategory,
-        description: eventDescription,
-        image_url: eventImageUrl,
-      },
-    ]);
+    try {
+      setUploading(true);
 
-    if (error) return setMessage(error.message);
+      let imageUrl = "";
 
-    setEventTitle("");
-    setEventDate("");
-    setEventCategory("General");
-    setEventDescription("");
-    setEventImageUrl("");
-    setMessage("Event added successfully.");
-    loadData();
+      if (eventImageFile) {
+        imageUrl = await uploadFile("website-images", eventImageFile);
+      }
+
+      const { error } = await supabase.from("website_events").insert([
+        {
+          title: eventTitle,
+          event_date: eventDate,
+          category: eventCategory,
+          description: eventDescription,
+          image_url: imageUrl,
+        },
+      ]);
+
+      if (error) throw new Error(error.message);
+
+      setEventTitle("");
+      setEventDate("");
+      setEventCategory("General");
+      setEventDescription("");
+      setEventImageFile(null);
+      setMessage("Event / gallery item uploaded successfully.");
+      loadData();
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function saveSettings(e) {
     e.preventDefault();
     setMessage("");
 
-    const payload = {
-      school_motto: schoolMotto,
-      school_logo_url: schoolLogoUrl,
-      contact_phone: contactPhone,
-      whatsapp_number: whatsappNumber,
-      email,
-      location,
-      updated_at: new Date().toISOString(),
-    };
+    try {
+      setUploading(true);
 
-    if (settings?.id) {
-      const { error } = await supabase
-        .from("website_settings")
-        .update(payload)
-        .eq("id", settings.id);
+      let finalLogoUrl = schoolLogoUrl;
 
-      if (error) return setMessage(error.message);
-    } else {
-      const { error } = await supabase.from("website_settings").insert([payload]);
-      if (error) return setMessage(error.message);
+      if (schoolLogoFile) {
+        finalLogoUrl = await uploadFile("website-images", schoolLogoFile);
+      }
+
+      const payload = {
+        school_motto: schoolMotto,
+        school_logo_url: finalLogoUrl,
+        contact_phone: contactPhone,
+        whatsapp_number: whatsappNumber,
+        email,
+        location,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (settings?.id) {
+        const { error } = await supabase
+          .from("website_settings")
+          .update(payload)
+          .eq("id", settings.id);
+
+        if (error) throw new Error(error.message);
+      } else {
+        const { error } = await supabase
+          .from("website_settings")
+          .insert([payload]);
+
+        if (error) throw new Error(error.message);
+      }
+
+      setSchoolLogoUrl(finalLogoUrl);
+      setSchoolLogoFile(null);
+      setMessage("Website settings saved successfully.");
+      loadData();
+    } catch (error) {
+      setMessage(error.message);
+    } finally {
+      setUploading(false);
     }
-
-    setMessage("Website settings saved successfully.");
-    loadData();
   }
 
   return (
@@ -141,7 +218,7 @@ export default function WebsiteManager() {
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-black">Website Manager</h1>
-            <p className="text-gray-300">Manage public website content</p>
+            <p className="text-gray-300">Upload files, images and website content</p>
           </div>
 
           <a href="/admin" className="text-[#f4b41a] font-bold">
@@ -168,9 +245,9 @@ export default function WebsiteManager() {
             onSubmit={addDownload}
             className="bg-white rounded-[2rem] p-8 shadow border"
           >
-            <h2 className="text-2xl font-black">Add Download</h2>
+            <h2 className="text-2xl font-black">Upload Download File</h2>
             <p className="mt-2 text-[#64748b]">
-              Add prospectus, admission forms, academic calendar PDFs, etc.
+              Upload prospectus, admission forms, academic calendar PDFs, etc.
             </p>
 
             <div className="mt-6 grid gap-4">
@@ -195,14 +272,16 @@ export default function WebsiteManager() {
               </select>
 
               <input
-                value={downloadUrl}
-                onChange={(e) => setDownloadUrl(e.target.value)}
-                placeholder="PDF or file URL"
+                type="file"
+                accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+                onChange={(e) => setDownloadFile(e.target.files?.[0] || null)}
                 required
                 className="input"
               />
 
-              <button className="btn-gold">Add Download</button>
+              <button disabled={uploading} className="btn-gold">
+                {uploading ? "Uploading..." : "Upload Download"}
+              </button>
             </div>
           </form>
 
@@ -210,7 +289,7 @@ export default function WebsiteManager() {
             onSubmit={addEvent}
             className="bg-white rounded-[2rem] p-8 shadow border"
           >
-            <h2 className="text-2xl font-black">Add Event / Gallery Item</h2>
+            <h2 className="text-2xl font-black">Upload Gallery / Event Image</h2>
             <p className="mt-2 text-[#64748b]">
               Add graduation, speech day, culture day, career day photos.
             </p>
@@ -246,9 +325,9 @@ export default function WebsiteManager() {
               </select>
 
               <input
-                value={eventImageUrl}
-                onChange={(e) => setEventImageUrl(e.target.value)}
-                placeholder="Image URL"
+                type="file"
+                accept="image/png,image/jpeg,image/jpg,image/webp"
+                onChange={(e) => setEventImageFile(e.target.files?.[0] || null)}
                 className="input"
               />
 
@@ -260,7 +339,9 @@ export default function WebsiteManager() {
                 className="input"
               />
 
-              <button className="btn-dark">Add Event</button>
+              <button disabled={uploading} className="btn-dark">
+                {uploading ? "Uploading..." : "Upload Gallery Item"}
+              </button>
             </div>
           </form>
         </div>
@@ -280,9 +361,9 @@ export default function WebsiteManager() {
             />
 
             <input
-              value={schoolLogoUrl}
-              onChange={(e) => setSchoolLogoUrl(e.target.value)}
-              placeholder="School logo URL"
+              type="file"
+              accept="image/png,image/jpeg,image/jpg,image/webp"
+              onChange={(e) => setSchoolLogoFile(e.target.files?.[0] || null)}
               className="input"
             />
 
@@ -315,7 +396,20 @@ export default function WebsiteManager() {
             />
           </div>
 
-          <button className="btn-gold mt-6">Save Website Settings</button>
+          {schoolLogoUrl && (
+            <div className="mt-6">
+              <p className="font-bold">Current Logo:</p>
+              <img
+                src={schoolLogoUrl}
+                alt="School logo"
+                className="mt-3 w-24 h-24 rounded-2xl object-cover border"
+              />
+            </div>
+          )}
+
+          <button disabled={uploading} className="btn-gold mt-6">
+            {uploading ? "Saving..." : "Save Website Settings"}
+          </button>
         </form>
 
         <div className="mt-10 grid gap-8 md:grid-cols-2">
@@ -354,6 +448,13 @@ export default function WebsiteManager() {
 
               {events.map((item) => (
                 <div key={item.id} className="border-b pb-4">
+                  {item.image_url && (
+                    <img
+                      src={item.image_url}
+                      alt={item.title}
+                      className="mb-3 w-full h-40 object-cover rounded-2xl"
+                    />
+                  )}
                   <p className="font-black">{item.title}</p>
                   <p className="text-sm text-[#64748b]">
                     {item.category} • {item.event_date || "No date"}
@@ -373,6 +474,7 @@ export default function WebsiteManager() {
           border-radius: 1rem;
           padding: 1rem;
           outline: none;
+          background: white;
         }
 
         .input:focus {
@@ -393,6 +495,10 @@ export default function WebsiteManager() {
           padding: 1rem 1.4rem;
           border-radius: 1rem;
           font-weight: 900;
+        }
+
+        button:disabled {
+          opacity: 0.6;
         }
       `}</style>
     </main>

@@ -329,24 +329,24 @@ async function promoteClass(currentClass) {
 
   return (
     <main className="min-h-screen bg-[#f8f6ef] text-[#0f172a]">
-      <header className="bg-[#0f172a] text-white px-6 py-6">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-black">Admin Dashboard</h1>
-            <p className="text-gray-300">Perfect Foundation Academy</p>
-          </div>
+     <header className="bg-[#0f172a] text-white px-6 py-6">
+  <div className="max-w-6xl mx-auto flex justify-between items-center">
+    <div>
+      <h1 className="text-3xl font-black">Admin Dashboard</h1>
+      <p className="text-gray-300">Perfect Foundation Academy</p>
+    </div>
 
-          <div className="flex gap-4">
-  <a href="/website-manager" className="text-[#f4b41a] font-bold">
-    Website Manager
-  </a>
+    <div className="flex gap-4">
+      <a href="/website-manager" className="text-[#f4b41a] font-bold">
+        Website Manager
+      </a>
 
-  <a href="/" className="text-[#f4b41a] font-bold">
-    Home
-  </a>
-</div>
-      </header>
-
+      <a href="/" className="text-[#f4b41a] font-bold">
+        Home
+      </a>
+    </div>
+  </div>
+</header>
       <section className="max-w-6xl mx-auto px-6 py-10">
         {message && (
           <div className="mb-6 bg-white border rounded-2xl p-4 font-bold">

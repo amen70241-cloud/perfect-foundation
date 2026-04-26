@@ -4,11 +4,15 @@ import { supabase } from "../lib/supabase";
 export default function Accountant() {
   const [students, setStudents] = useState([]);
   const [fees, setFees] = useState([]);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [classFilter, setClassFilter] = useState("all");
 
   const [studentId, setStudentId] = useState("");
   const [term, setTerm] = useState("Term 1");
   const [totalFee, setTotalFee] = useState("");
   const [paidAmount, setPaidAmount] = useState("");
+  const [note, setNote] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -45,6 +49,7 @@ export default function Accountant() {
         total_fee: total,
         paid_amount: paid,
         status,
+        note,
       },
     ]);
 
@@ -57,21 +62,52 @@ export default function Accountant() {
     setTerm("Term 1");
     setTotalFee("");
     setPaidAmount("");
+    setNote("");
     setMessage("Fee record saved successfully.");
     loadData();
   }
 
-  const totalExpected = fees.reduce(
+  const filteredStudents = students.filter((student) => {
+    const matchesSearch = student.full_name
+      ?.toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesClass =
+      classFilter === "all" || student.class === classFilter;
+
+    return matchesSearch && matchesClass;
+  });
+
+  const filteredFees = fees.filter((fee) => {
+    const studentName = fee.students?.full_name || "";
+    const studentClass = fee.students?.class || "";
+
+    const matchesSearch = studentName
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "all" || fee.status === statusFilter;
+
+    const matchesClass =
+      classFilter === "all" || studentClass === classFilter;
+
+    return matchesSearch && matchesStatus && matchesClass;
+  });
+
+  const totalExpected = filteredFees.reduce(
     (sum, item) => sum + Number(item.total_fee || 0),
     0
   );
 
-  const totalPaid = fees.reduce(
+  const totalPaid = filteredFees.reduce(
     (sum, item) => sum + Number(item.paid_amount || 0),
     0
   );
 
   const outstanding = totalExpected - totalPaid;
+
+  const classes = [...new Set(students.map((s) => s.class).filter(Boolean))];
 
   return (
     <main className="min-h-screen bg-[#f8f6ef] text-[#0f172a]">
@@ -128,6 +164,26 @@ export default function Accountant() {
             </p>
 
             <div className="mt-6 grid gap-4">
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search student by name"
+                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+              />
+
+              <select
+                value={classFilter}
+                onChange={(e) => setClassFilter(e.target.value)}
+                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+              >
+                <option value="all">All Classes</option>
+                {classes.map((className) => (
+                  <option key={className} value={className}>
+                    {className}
+                  </option>
+                ))}
+              </select>
+
               <select
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value)}
@@ -135,7 +191,7 @@ export default function Accountant() {
                 className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
               >
                 <option value="">Select student</option>
-                {students.map((student) => (
+                {filteredStudents.map((student) => (
                   <option key={student.id} value={student.id}>
                     {student.full_name} — {student.class}
                   </option>
@@ -170,6 +226,14 @@ export default function Accountant() {
                 className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
               />
 
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Payment note, receipt number, or comment"
+                rows="3"
+                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+              />
+
               <button
                 type="submit"
                 className="bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black"
@@ -184,28 +248,107 @@ export default function Accountant() {
           </form>
 
           <div className="bg-white rounded-[2rem] p-8 shadow border">
-            <h2 className="text-3xl font-black">Recent Fee Records</h2>
+            <h2 className="text-3xl font-black">Filters</h2>
+            <p className="mt-2 text-[#64748b]">
+              Search and filter payment records.
+            </p>
 
-            <div className="mt-6 space-y-4">
-              {fees.map((fee) => (
-                <div key={fee.id} className="border-b pb-4">
-                  <p className="font-black">
-                    {fee.students?.full_name || "Unknown student"}
-                  </p>
-                  <p className="text-sm text-[#64748b]">
-                    {fee.students?.class} • {fee.term}
-                  </p>
-                  <p className="mt-2 text-sm">
-                    Total: GHS {Number(fee.total_fee).toLocaleString()} | Paid:
-                    GHS {Number(fee.paid_amount).toLocaleString()} | Balance:
-                    GHS {Number(fee.balance).toLocaleString()}
-                  </p>
-                  <p className="mt-1 font-bold text-[#d9a514]">
-                    Status: {fee.status}
-                  </p>
-                </div>
-              ))}
+            <div className="mt-6 grid gap-4">
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search student name"
+                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+              />
+
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+              >
+                <option value="all">All Statuses</option>
+                <option value="paid">Paid</option>
+                <option value="partial">Partial</option>
+                <option value="unpaid">Unpaid</option>
+              </select>
+
+              <select
+                value={classFilter}
+                onChange={(e) => setClassFilter(e.target.value)}
+                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+              >
+                <option value="all">All Classes</option>
+                {classes.map((className) => (
+                  <option key={className} value={className}>
+                    {className}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="bg-[#0f172a] text-white py-4 rounded-2xl font-black"
+              >
+                Print Fee Statement
+              </button>
             </div>
+          </div>
+        </div>
+
+        <div className="mt-8 bg-white rounded-[2rem] p-8 shadow border">
+          <h2 className="text-3xl font-black">Fee Records</h2>
+
+          <div className="mt-6 overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b text-[#64748b]">
+                  <th className="py-4 pr-4">Student</th>
+                  <th className="py-4 pr-4">Class</th>
+                  <th className="py-4 pr-4">Term</th>
+                  <th className="py-4 pr-4">Total</th>
+                  <th className="py-4 pr-4">Paid</th>
+                  <th className="py-4 pr-4">Balance</th>
+                  <th className="py-4 pr-4">Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {filteredFees.map((fee) => (
+                  <tr key={fee.id} className="border-b">
+                    <td className="py-4 pr-4 font-bold">
+                      {fee.students?.full_name || "Unknown student"}
+                    </td>
+                    <td className="py-4 pr-4">
+                      {fee.students?.class || "-"}
+                    </td>
+                    <td className="py-4 pr-4">{fee.term}</td>
+                    <td className="py-4 pr-4">
+                      GHS {Number(fee.total_fee).toLocaleString()}
+                    </td>
+                    <td className="py-4 pr-4 text-green-600 font-bold">
+                      GHS {Number(fee.paid_amount).toLocaleString()}
+                    </td>
+                    <td className="py-4 pr-4 text-red-600 font-bold">
+                      GHS {Number(fee.balance).toLocaleString()}
+                    </td>
+                    <td className="py-4 pr-4">
+                      <span className="bg-[#f4b41a]/20 text-[#9a6b00] px-4 py-2 rounded-full font-bold capitalize">
+                        {fee.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+
+                {filteredFees.length === 0 && (
+                  <tr>
+                    <td className="py-6 text-[#64748b]" colSpan="7">
+                      No fee records found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </section>

@@ -895,7 +895,7 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
 </footer>
      {/* FLOATING WHATSAPP */}
 <a
-  href="{whatsappLink}
+  href={whatsappLink}
   target="_blank"
   rel="noopener noreferrer"
   className="fixed bottom-6 right-6 z-50 w-20 h-20 rounded-full bg-[#25D366] text-white flex items-center justify-center text-3xl shadow-xl hover:scale-110 transition"

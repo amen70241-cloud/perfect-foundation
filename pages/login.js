@@ -24,8 +24,24 @@ export default function Login() {
       return;
     }
 
-    setMessage("Login successful. Redirecting...");
-    window.location.href = "/portal";
+    const { data: profileData, error: profileError } = await supabase
+  .from("profiles")
+  .select("role")
+  .eq("id", data.user.id)
+  .single();
+
+if (profileError) {
+  setMessage("Login successful, but no role profile found.");
+  return;
+}
+
+if (profileData.role === "admin") {
+  window.location.href = "/admin";
+} else if (profileData.role === "accountant") {
+  window.location.href = "/accountant";
+} else {
+  window.location.href = "/portal";
+}
   }
 
   return (

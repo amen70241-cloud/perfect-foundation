@@ -1,8 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+const [websiteDownloads, setWebsiteDownloads] = useState([]);
+const [websiteEvents, setWebsiteEvents] = useState([]);
 
+useEffect(() => {
+  loadWebsiteContent();
+}, []);
+
+async function loadWebsiteContent() {
+  const { data: downloadsData } = await supabase
+    .from("website_downloads")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(4);
+
+  const { data: eventsData } = await supabase
+    .from("website_events")
+    .select("*")
+    .order("event_date", { ascending: false })
+    .limit(6);
+
+  setWebsiteDownloads(downloadsData || []);
+  setWebsiteEvents(eventsData || []);
+}
   const whatsapp =
     "https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy";
   return (
@@ -44,11 +67,11 @@ export default function Home() {
         Admissions
       </a>
 
-      <a href="/downloads" onClick={() => setMenuOpen(false)}>
+      <a href="/#downloads" onClick={() => setMenuOpen(false)}>
         Downloads
       </a>
 
-      <a href="/gallery" onClick={() => setMenuOpen(false)}>
+      <a href="/#gallery" onClick={() => setMenuOpen(false)}>
         Gallery
       </a>
 

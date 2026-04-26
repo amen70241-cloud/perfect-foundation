@@ -92,37 +92,51 @@ export default function Admin() {
   }
 
   async function saveStudent(e) {
-    e.preventDefault();
-    setMessage("");
+  e.preventDefault();
+  setMessage("");
 
-    if (editingStudentId) {
-      const { error } = await supabase
-        .from("students")
-        .update({
-          full_name: studentName,
-          class: studentClass,
-        })
-        .eq("id", editingStudentId);
+  if (editingStudentId) {
+    const { error } = await supabase
+      .from("students")
+      .update({
+        full_name: studentName,
+        class: studentClass,
+      })
+      .eq("id", editingStudentId);
 
-      if (error) return setMessage(error.message);
-      setMessage("Student updated successfully.");
-    } else {
-      const { error } = await supabase.from("students").insert([
-        {
-          full_name: studentName,
-          class: studentClass,
-        },
-      ]);
+    if (error) return setMessage(error.message);
 
-      if (error) return setMessage(error.message);
-      setMessage("Student added successfully.");
+    setMessage("Student updated successfully.");
+  } else {
+    const response = await fetch("/api/create-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        full_name: studentName,
+        role: "student",
+        class_name: studentClass,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      setMessage(result.error || "Could not create student login.");
+      return;
     }
 
-    setStudentName("");
-    setStudentClass("");
-    setEditingStudentId(null);
-    loadData();
+    setMessage(
+      `Student added. Login email: ${result.email} | Password: ${result.password}`
+    );
   }
+
+  setStudentName("");
+  setStudentClass("");
+  setEditingStudentId(null);
+  loadData();
+}
 
   function editStudent(student) {
     setEditingStudentId(student.id);
@@ -132,39 +146,66 @@ export default function Admin() {
   }
 
   async function saveStaff(e) {
-    e.preventDefault();
-    setMessage("");
+  e.preventDefault();
+  setMessage("");
 
-    const payload = {
-      full_name: staffName,
-      role: staffRole,
-      assigned_class: staffClass,
-      phone: staffPhone,
-    };
+  const roleMap = {
+    Admin: "admin",
+    Teacher: "teacher",
+    Accountant: "accountant",
+    Headteacher: "teacher",
+  };
 
-    if (editingStaffId) {
-      const { error } = await supabase
-        .from("staff")
-        .update(payload)
-        .eq("id", editingStaffId);
+  const authRole = roleMap[staffRole] || "teacher";
 
-      if (error) return setMessage(error.message);
-      setMessage("Staff updated successfully.");
-    } else {
-      const { error } = await supabase.from("staff").insert([payload]);
+  if (editingStaffId) {
+    const { error } = await supabase
+      .from("staff")
+      .update({
+        full_name: staffName,
+        role: staffRole,
+        assigned_class: staffClass,
+        phone: staffPhone,
+      })
+      .eq("id", editingStaffId);
 
-      if (error) return setMessage(error.message);
-      setMessage("Staff added successfully.");
+    if (error) return setMessage(error.message);
+
+    setMessage("Staff updated successfully.");
+  } else {
+    const response = await fetch("/api/create-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        full_name: staffName,
+        role: authRole,
+        staff_role: staffRole,
+        assigned_class: staffClass,
+        phone: staffPhone,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      setMessage(result.error || "Could not create staff login.");
+      return;
     }
 
-    setStaffName("");
-    setStaffRole("");
-    setStaffClass("");
-    setStaffPhone("");
-    setEditingStaffId(null);
-    loadData();
+    setMessage(
+      `Staff added. Login email: ${result.email} | Password: ${result.password}`
+    );
   }
 
+  setStaffName("");
+  setStaffRole("");
+  setStaffClass("");
+  setStaffPhone("");
+  setEditingStaffId(null);
+  loadData();
+}
   function editStaff(member) {
     setEditingStaffId(member.id);
     setStaffName(member.full_name);

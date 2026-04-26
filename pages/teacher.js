@@ -18,11 +18,13 @@ const classes = [
 
 export default function Teacher() {
   const [students, setStudents] = useState([]);
+  const [subjects, setSubjects] = useState([]);
   const [selectedClass, setSelectedClass] = useState("Primary 1");
   const [selectedStudent, setSelectedStudent] = useState("");
   const [attendanceStatus, setAttendanceStatus] = useState("present");
 
   const [term, setTerm] = useState("Term 1");
+  const [resultType, setResultType] = useState("Exam");
   const [subject, setSubject] = useState("");
   const [score, setScore] = useState("");
   const [remarks, setRemarks] = useState("");
@@ -34,6 +36,12 @@ export default function Teacher() {
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    loadSubjects();
+    setSelectedStudent("");
+    setSubject("");
+  }, [selectedClass]);
 
   async function loadData() {
     const { data: studentsData } = await supabase
@@ -56,8 +64,27 @@ export default function Teacher() {
     setResults(resultsData || []);
   }
 
+  async function loadSubjects() {
+    const { data, error } = await supabase
+      .from("class_subjects")
+      .select("*")
+      .eq("class", selectedClass)
+      .order("subject", { ascending: true });
+
+    if (error) {
+      setSubjects([]);
+      return;
+    }
+
+    setSubjects(data || []);
+  }
+
   const classStudents = students.filter(
     (student) => student.class === selectedClass
+  );
+
+  const classResults = results.filter(
+    (item) => item.class === selectedClass && item.term === term
   );
 
   function calculateGrade(value) {
@@ -102,10 +129,12 @@ export default function Teacher() {
         student_id: selectedStudent,
         class: selectedClass,
         term,
+        result_type: resultType,
         subject,
         score: Number(score),
         grade: calculateGrade(score),
         teacher_remarks: remarks,
+        published: false,
       },
     ]);
 
@@ -117,7 +146,25 @@ export default function Teacher() {
     setSubject("");
     setScore("");
     setRemarks("");
-    setMessage("Result saved successfully.");
+    setMessage("Result saved as draft. Click Publish Results when ready.");
+    loadData();
+  }
+
+  async function publishResults() {
+    setMessage("");
+
+    const { error } = await supabase
+      .from("results")
+      .update({ published: true })
+      .eq("class", selectedClass)
+      .eq("term", term);
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setMessage(`Results published for ${selectedClass} - ${term}.`);
     loadData();
   }
 
@@ -144,27 +191,47 @@ export default function Teacher() {
         )}
 
         <div className="grid gap-6 md:grid-cols-4">
-          <Stat title="Assigned Class" value={selectedClass} />
+          <Stat title="Selected Class" value={selectedClass} />
           <Stat title="Students" value={classStudents.length} />
           <Stat title="Attendance Records" value={attendance.length} />
-          <Stat title="Results Added" value={results.length} />
+          <Stat title="Results Drafts" value={classResults.length} />
         </div>
 
         <div className="mt-8 bg-white rounded-[2rem] p-8 shadow border">
-          <h2 className="text-2xl font-black">Select Class</h2>
+          <h2 className="text-2xl font-black">Class & Term</h2>
 
-          <select
-            value={selectedClass}
-            onChange={(e) => {
-              setSelectedClass(e.target.value);
-              setSelectedStudent("");
-            }}
-            className="mt-5 w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
-          >
-            {classes.map((className) => (
-              <option key={className}>{className}</option>
-            ))}
-          </select>
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            <select
+              value={selectedClass}
+              onChange={(e) => setSelectedClass(e.target.value)}
+              className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+            >
+              {classes.map((className) => (
+                <option key={className}>{className}</option>
+              ))}
+            </select>
+
+            <select
+              value={term}
+              onChange={(e) => setTerm(e.target.value)}
+              className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+            >
+              <option>Term 1</option>
+              <option>Term 2</option>
+              <option>Term 3</option>
+            </select>
+
+            <select
+              value={resultType}
+              onChange={(e) => setResultType(e.target.value)}
+              className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+            >
+              <option>Exam</option>
+              <option>Class Test</option>
+              <option>Mid-Term Test</option>
+              <option>End of Term Exam</option>
+            </select>
+          </div>
         </div>
 
         <div className="mt-8 grid gap-8 md:grid-cols-2">
@@ -214,7 +281,7 @@ export default function Teacher() {
           >
             <h2 className="text-2xl font-black">Enter Results</h2>
             <p className="mt-2 text-[#64748b]">
-              Add class test or exam scores and teacher remarks.
+              Add scores as drafts. Publish when ready.
             </p>
 
             <div className="mt-6 grid gap-4">
@@ -233,22 +300,18 @@ export default function Teacher() {
               </select>
 
               <select
-                value={term}
-                onChange={(e) => setTerm(e.target.value)}
-                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
-              >
-                <option>Term 1</option>
-                <option>Term 2</option>
-                <option>Term 3</option>
-              </select>
-
-              <input
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
-                placeholder="Subject e.g. English"
                 required
                 className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
-              />
+              >
+                <option value="">Select subject</option>
+                {subjects.map((item) => (
+                  <option key={item.id} value={item.subject}>
+                    {item.subject}
+                  </option>
+                ))}
+              </select>
 
               <input
                 type="number"
@@ -268,10 +331,71 @@ export default function Teacher() {
               />
 
               <button className="bg-[#0f172a] text-white py-4 rounded-2xl font-black">
-                Save Result
+                Save Result as Draft
+              </button>
+
+              <button
+                type="button"
+                onClick={publishResults}
+                className="bg-green-600 text-white py-4 rounded-2xl font-black"
+              >
+                Publish Results for {selectedClass} - {term}
               </button>
             </div>
           </form>
+        </div>
+
+        <div className="mt-8 bg-white rounded-[2rem] p-8 shadow border">
+          <h2 className="text-2xl font-black">Results for {selectedClass}</h2>
+          <p className="mt-2 text-[#64748b]">
+            Published results will appear on the student portal.
+          </p>
+
+          <div className="mt-6 overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b text-[#64748b]">
+                  <th className="py-4 pr-4">Student</th>
+                  <th className="py-4 pr-4">Subject</th>
+                  <th className="py-4 pr-4">Score</th>
+                  <th className="py-4 pr-4">Grade</th>
+                  <th className="py-4 pr-4">Type</th>
+                  <th className="py-4 pr-4">Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {classResults.map((item) => (
+                  <tr key={item.id} className="border-b">
+                    <td className="py-4 pr-4 font-bold">
+                      {item.students?.full_name || "Student"}
+                    </td>
+                    <td className="py-4 pr-4">{item.subject}</td>
+                    <td className="py-4 pr-4">{item.score}%</td>
+                    <td className="py-4 pr-4">{item.grade}</td>
+                    <td className="py-4 pr-4">{item.result_type}</td>
+                    <td className="py-4 pr-4">
+                      {item.published ? (
+                        <span className="text-green-600 font-bold">
+                          Published
+                        </span>
+                      ) : (
+                        <span className="text-[#d9a514] font-bold">Draft</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+
+                {classResults.length === 0 && (
+                  <tr>
+                    <td colSpan="6" className="py-6 text-[#64748b]">
+                      No results entered for this class and term.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div className="mt-8 grid gap-8 md:grid-cols-2">
@@ -306,7 +430,8 @@ export default function Teacher() {
                     {item.students?.full_name || "Student"}
                   </p>
                   <p className="text-sm text-[#64748b]">
-                    {item.subject} • {item.score}% • Grade {item.grade}
+                    {item.subject} • {item.score}% • Grade {item.grade} •{" "}
+                    {item.published ? "Published" : "Draft"}
                   </p>
                 </div>
               ))}

@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabase";
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [websiteSettings, setWebsiteSettings] = useState(null);
 const [websiteDownloads, setWebsiteDownloads] = useState([]);
 const [websiteEvents, setWebsiteEvents] = useState([]);
 
@@ -22,21 +23,48 @@ async function loadWebsiteContent() {
     .select("*")
     .order("event_date", { ascending: false })
     .limit(6);
+  const { data: settingsData } = await supabase
+  .from("website_settings")
+  .select("*")
+  .limit(1)
+  .single();
 
+setWebsiteSettings(settingsData || null);
   setWebsiteDownloads(downloadsData || []);
   setWebsiteEvents(eventsData || []);
 }
   const whatsapp =
     "https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy";
+  const schoolLogo = websiteSettings?.school_logo_url;
+const schoolMotto =
+  websiteSettings?.school_motto ||
+  "Building Excellence, Discipline, Faith, and a Strong Academic Foundation";
+
+const contactPhone = websiteSettings?.contact_phone || "+233244986221";
+const whatsappNumber = websiteSettings?.whatsapp_number || "+233244986221";
+const schoolEmail = websiteSettings?.email || "info@pfa.edu";
+const schoolLocation =
+  websiteSettings?.location || "Oshuman, Top Radio, Accra, Ghana";
+
+const cleanWhatsApp = whatsappNumber.replace(/\D/g, "");
+const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20make%20an%20enquiry.`;
   return (
     <main className="bg-[#f8f6ef] text-[#1e293b]">
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-[#f8f6ef]/95 backdrop-blur border-b border-gray-200 nav-shadow transition-all duration-300">
         <div className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-[#0f172a] text-[#f4b41a] flex items-center justify-center text-2xl shadow-lg">
-              🎓
-            </div>
+           <div className="w-14 h-14 rounded-2xl bg-[#0f172a] text-[#f4b41a] flex items-center justify-center text-2xl shadow-lg overflow-hidden">
+  {schoolLogo ? (
+    <img
+      src={schoolLogo}
+      alt="Perfect Foundation Academy logo"
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    "🎓"
+  )}
+</div>
 
             <div>
               <h1 className="text-2xl font-extrabold tracking-tight leading-tight text-[#0f172a]">
@@ -84,7 +112,7 @@ async function loadWebsiteContent() {
       </a>
 
       <a
-        href="https://wa.me/233244986221"
+        href={whatsappLink}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => setMenuOpen(false)}
@@ -114,8 +142,7 @@ async function loadWebsiteContent() {
           </h2>
 
           <p className="fade-up delay-1 mt-10 text-2xl md:text-3xl italic leading-snug max-w-3xl">
-            Building Excellence, Discipline, Faith, and a Strong Academic
-            Foundation.
+            {schoolMotto}
           </p>
 
           <p className="mt-8 text-lg md:text-xl leading-9 text-gray-200 max-w-3xl">
@@ -140,7 +167,7 @@ async function loadWebsiteContent() {
             </a>
 
             <a
-              href={whatsapp}
+              href={whatsappLink}
               className="bg-[#20b957] text-white text-center py-5 rounded-2xl text-xl md:text-2xl font-bold shadow-xl hover:shadow-2xl transition"
             >
               💬 WhatsApp Us
@@ -557,7 +584,7 @@ async function loadWebsiteContent() {
 
       <div className="mt-10 grid gap-5">
         <a
-          href="https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child."
+          href="{whatsappLink}?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child."
           target="_blank"
           rel="noreferrer"
           className="bg-[#f4b41a] text-[#0f172a] text-center py-5 rounded-2xl text-xl font-black shadow-xl hover:shadow-2xl transition"
@@ -566,7 +593,7 @@ async function loadWebsiteContent() {
         </a>
 
         <a
-          href="https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child."
+          href="{whatsappLink}?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child."
           target="_blank"
           rel="noreferrer"
           className="bg-[#20b957] text-white text-center py-5 rounded-2xl text-xl font-black shadow-xl hover:shadow-2xl transition"
@@ -800,7 +827,11 @@ async function loadWebsiteContent() {
         Contact the school office for admissions, visits, enquiries and general
         information.
       </p>
-
+<div className="mt-8 space-y-2 text-lg text-[#0f172a] font-medium">
+  <p>📞 Phone / WhatsApp: {contactPhone}</p>
+  <p>📧 Email: {schoolEmail}</p>
+  <p>📍 Address: {schoolLocation}</p>
+</div>
       <div className="mt-10 grid gap-5 text-lg">
         <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
           📞 <span className="font-bold">Phone / WhatsApp:</span> +233244986221
@@ -817,7 +848,7 @@ async function loadWebsiteContent() {
       </div>
 
       <a
-        href="https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child."
+        href="{whatsappLink}?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child."
         target="_blank"
         rel="noreferrer"
         className="mt-10 inline-block bg-[#20b957] text-white px-8 py-5 rounded-2xl text-xl font-black shadow-xl hover:shadow-2xl transition"
@@ -864,7 +895,7 @@ async function loadWebsiteContent() {
 </footer>
      {/* FLOATING WHATSAPP */}
 <a
-  href="https://wa.me/233244986221"
+  href="{whatsappLink}
   target="_blank"
   rel="noopener noreferrer"
   className="fixed bottom-6 right-6 z-50 w-20 h-20 rounded-full bg-[#25D366] text-white flex items-center justify-center text-3xl shadow-xl hover:scale-110 transition"

@@ -1,7 +1,39 @@
+import { useState } from "react";
+import { supabase } from "../lib/supabase";
+
 export default function Login() {
+  const [email, setEmail] = useState("admin@pfa.com");
+  const [password, setPassword] = useState("Admin12345");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setMessage("Login successful. Redirecting...");
+    window.location.href = "/portal";
+  }
+
   return (
     <main className="min-h-screen bg-[#0f172a] flex items-center justify-center px-6">
-      <div className="bg-white rounded-[2rem] p-8 shadow-2xl w-full max-w-md">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white rounded-[2rem] p-8 shadow-2xl w-full max-w-md"
+      >
         <div className="text-center">
           <div className="mx-auto w-20 h-20 rounded-3xl bg-[#0f172a] text-[#f4b41a] flex items-center justify-center text-4xl">
             🎓
@@ -19,38 +51,35 @@ export default function Login() {
         <div className="mt-8 grid gap-4">
           <input
             type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Email address"
             className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+            required
           />
 
           <input
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+            required
           />
 
-          <select className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]">
-            <option>Select login type</option>
-            <option>Student</option>
-            <option>Parent</option>
-            <option>Teacher</option>
-            <option>Accountant</option>
-            <option>Admin</option>
-          </select>
-
-          <a
-            href="/portal"
-            className="text-center bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black shadow-lg"
+          <button
+            type="submit"
+            disabled={loading}
+            className="text-center bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black shadow-lg disabled:opacity-60"
           >
-            Login to Portal
-          </a>
+            {loading ? "Logging in..." : "Login"}
+          </button>
 
-          <a
-            href="/accountant"
-            className="text-center bg-[#0f172a] text-white py-4 rounded-2xl font-black shadow-lg"
-          >
-            Accountant Demo
-          </a>
+          {message && (
+            <p className="text-center text-sm font-bold text-[#0f172a]">
+              {message}
+            </p>
+          )}
         </div>
 
         <a
@@ -59,7 +88,7 @@ export default function Login() {
         >
           ← Back to website
         </a>
-      </div>
+      </form>
     </main>
   );
 }

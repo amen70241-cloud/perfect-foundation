@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <main className="bg-[#f8f6ef] text-[#1e293b]">
       {/* HEADER */}
-      <header className="sticky top-0 z-50 bg-[#f8f6ef]/95 backdrop-blur border-b border-gray-200">
+      <header className="sticky top-0 z-50 bg-[#f8f6ef]/95 backdrop-blur border-b border-gray-200 nav-shadow transition-all duration-300">
         <div className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-2xl bg-[#0f172a] text-[#f4b41a] flex items-center justify-center text-2xl shadow-lg">
@@ -34,14 +34,12 @@ export default function Home() {
         </div>
       </header>
 {menuOpen && (
-  <div className="fixed top-24 right-6 z-50 bg-white rounded-3xl shadow-2xl border border-gray-100 p-6 w-72">
+  <div className="fixed top-24 right-6 z-50 bg-white rounded-3xl shadow-2xl border border-gray-100 p-6 w-72 fade-up">
     <div className="grid gap-4 text-lg font-bold text-[#0f172a]">
       <a href="#programmes" onClick={() => setMenuOpen(false)}>
         Programmes
       </a>
-<a href="#contact" onClick={() => setMenuOpen(false)}>
-  Contact
-</a>
+
       <a href="#admissions" onClick={() => setMenuOpen(false)}>
         Admissions
       </a>
@@ -49,11 +47,19 @@ export default function Home() {
       <a href="#downloads" onClick={() => setMenuOpen(false)}>
         Downloads
       </a>
+
+      <a href="#contact" onClick={() => setMenuOpen(false)}>
+        Contact
+      </a>
+
       <a href="/login" onClick={() => setMenuOpen(false)}>
-  Portal Login
-</a>
-      <a href="https://wa.me/233244986221"
+        Portal Login
+      </a>
+
+      <a
+        href="https://wa.me/233244986221"
         target="_blank"
+        rel="noopener noreferrer"
         onClick={() => setMenuOpen(false)}
         className="bg-[#20b957] text-white text-center py-3 rounded-2xl"
       >

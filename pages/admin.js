@@ -1,4 +1,22 @@
+import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabaseClient";
+
 export default function Admin() {
+  const [students, setStudents] = useState(0);
+  const [teachers, setTeachers] = useState(0);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  async function fetchData() {
+    const { data: studentsData } = await supabase.from("students").select("*");
+    const { data: teachersData } = await supabase.from("teachers").select("*");
+
+    setStudents(studentsData?.length || 0);
+    setTeachers(teachersData?.length || 0);
+  }
+
   return (
     <main className="min-h-screen bg-[#f8f6ef] text-[#0f172a]">
       <header className="bg-[#0f172a] text-white px-6 py-6">
@@ -18,46 +36,64 @@ export default function Admin() {
         <div className="grid gap-6 md:grid-cols-4">
           <div className="bg-white rounded-3xl p-6 shadow border">
             <p className="text-[#64748b] font-bold">Students</p>
-            <h3 className="mt-3 text-3xl font-black">420</h3>
+            <h3 className="mt-3 text-3xl font-black">{students}</h3>
           </div>
 
           <div className="bg-white rounded-3xl p-6 shadow border">
             <p className="text-[#64748b] font-bold">Teachers</p>
-            <h3 className="mt-3 text-3xl font-black">28</h3>
+            <h3 className="mt-3 text-3xl font-black">{teachers}</h3>
           </div>
 
           <div className="bg-white rounded-3xl p-6 shadow border">
             <p className="text-[#64748b] font-bold">Classes</p>
-            <h3 className="mt-3 text-3xl font-black">14</h3>
+            <h3 className="mt-3 text-3xl font-black">--</h3>
           </div>
 
           <div className="bg-white rounded-3xl p-6 shadow border">
             <p className="text-[#64748b] font-bold">Admissions</p>
-            <h3 className="mt-3 text-3xl font-black">36</h3>
+            <h3 className="mt-3 text-3xl font-black">--</h3>
           </div>
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          {[
-            "Manage Students",
-            "Manage Staff",
-            "Manage Classes",
-            "Admissions Enquiries",
-            "Announcements",
-            "Events & Gallery",
-          ].map((item) => (
-            <div
-              key={item}
-              className="bg-white rounded-3xl p-8 shadow border border-gray-100"
-            >
-              <h3 className="text-2xl font-black">{item}</h3>
-              <p className="mt-3 text-[#64748b]">
-                Admin module placeholder. We will connect this to Supabase next.
-              </p>
-            </div>
-          ))}
+        <div className="mt-10">
+          <h2 className="text-2xl font-black mb-4">Recent Students</h2>
+
+          <div className="bg-white rounded-3xl p-6 shadow border">
+            <StudentList />
+          </div>
         </div>
       </section>
     </main>
+  );
+}
+
+function StudentList() {
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    loadStudents();
+  }, []);
+
+  async function loadStudents() {
+    const { data } = await supabase
+      .from("students")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    setStudents(data || []);
+  }
+
+  return (
+    <div className="space-y-3">
+      {students.map((s) => (
+        <div
+          key={s.id}
+          className="flex justify-between border-b py-2 text-sm"
+        >
+          <span className="font-bold">{s.full_name}</span>
+          <span className="text-gray-500">{s.class}</span>
+        </div>
+      ))}
+    </div>
   );
 }

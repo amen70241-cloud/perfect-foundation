@@ -206,6 +206,7 @@ async function promoteClass(currentClass) {
       .from("staff")
       .update({
         full_name: staffName,
+        gender: staffGender,
         role: staffRole,
         assigned_class: staffClass,
         phone: staffPhone,
@@ -223,6 +224,7 @@ async function promoteClass(currentClass) {
       },
       body: JSON.stringify({
         full_name: staffName,
+        gender: staffGender,
         role: authRole,
         staff_role: staffRole,
         assigned_class: staffClass,
@@ -246,6 +248,7 @@ async function promoteClass(currentClass) {
   setStaffRole("");
   setStaffClass("");
   setStaffPhone("");
+  setStaffGender("");
   setEditingStaffId(null);
   loadData();
 }
@@ -457,7 +460,16 @@ async function promoteClass(currentClass) {
                 placeholder="Phone number"
                 className="input"
               />
-
+              <select
+  value={staffGender}
+  onChange={(e) => setStaffGender(e.target.value)}
+  required
+  className="input"
+>
+  <option value="">Select gender</option>
+  <option value="Male">Male</option>
+  <option value="Female">Female</option>
+</select>
               <button className="btn-gold">
                 {editingStaffId ? "Update Staff" : "Add Staff"}
               </button>

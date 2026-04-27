@@ -1,4 +1,3 @@
-import SchoolChatbot from "../components/SchoolChatbot";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 

@@ -954,26 +954,47 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
   </div>
 </section>
 
-<footer className="bg-[#071326] text-white px-6 py-10 text-center">
-  <h2 className="text-2xl font-black">Perfect Foundation Academy</h2>
-  <p className="mt-3 text-[#f4b41a] tracking-[0.25em] text-sm">
-    EXCELLENCE • DISCIPLINE • FAITH
-  </p>
-         <div className="mt-10">
-  <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
+<footer className="bg-[#071326] text-white px-6 py-16">
+  <div className="max-w-6xl mx-auto grid gap-10 md:grid-cols-2">
+    <div>
+      <h2 className="text-3xl font-black">Perfect Foundation Academy</h2>
 
-  <div className="space-y-3 text-gray-300 text-lg">
-    <a href="#about" className="block hover:text-[#f4b41a]">About</a>
-    <a href="#programmes" className="block hover:text-[#f4b41a]">Programmes</a>
-    <a href="#admissions" className="block hover:text-[#f4b41a]">Admissions</a>
-    <a href="#downloads" className="block hover:text-[#f4b41a]">Downloads</a>
-    <a href="#gallery" className="block hover:text-[#f4b41a]">Gallery</a>
-    <a href="#contact" className="block hover:text-[#f4b41a]">Contact</a>
+      <p className="mt-3 text-[#f4b41a] tracking-[0.25em] text-sm">
+        EXCELLENCE • DISCIPLINE • FAITH
+      </p>
+
+      <p className="mt-6 text-gray-300 leading-8">
+        {schoolMotto}
+      </p>
+    </div>
+
+    <div>
+      <h3 className="text-2xl font-black mb-5">Quick Links</h3>
+
+      <div className="grid grid-cols-2 gap-3 text-gray-300 text-lg">
+        <a href="#about" className="hover:text-[#f4b41a]">About</a>
+        <a href="#programmes" className="hover:text-[#f4b41a]">Programmes</a>
+        <a href="#admissions" className="hover:text-[#f4b41a]">Admissions</a>
+        <a href="#downloads" className="hover:text-[#f4b41a]">Downloads</a>
+        <a href="#gallery" className="hover:text-[#f4b41a]">Gallery</a>
+        <a href="#contact" className="hover:text-[#f4b41a]">Contact</a>
+      </div>
+
+      <div className="mt-8 space-y-3 text-gray-300">
+        <p>📞 {contactPhone}</p>
+        <p>📧 {schoolEmail}</p>
+        <p>📍 {schoolLocation}</p>
+      </div>
+    </div>
   </div>
-</div>
-  <p className="mt-6 text-gray-400">
-    © 2026 Perfect Foundation Academy. All rights reserved.
-  </p>      
+
+  <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between gap-4 text-gray-400">
+    <p>© 2026 Perfect Foundation Academy. All rights reserved.</p>
+
+    <a href="/login" className="hover:text-[#f4b41a]">
+      Staff Login
+    </a>
+  </div>
 </footer>
     {/* FLOATING WHATSAPP */}
 <a

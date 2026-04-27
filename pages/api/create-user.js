@@ -49,6 +49,7 @@ export default async function handler(req, res) {
       role,
       class_name,
       phone,
+      gender,
       assigned_class,
       staff_role,
     } = req.body;
@@ -113,6 +114,7 @@ export default async function handler(req, res) {
           {
             full_name,
             class: class_name,
+            gender,
             login_email: email,
             temp_password: password,
           },

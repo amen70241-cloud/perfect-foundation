@@ -1091,7 +1091,6 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
   <span className="absolute inset-0 rounded-full bg-[#25D366] opacity-30 animate-ping"></span>
   <span className="relative z-10">💬</span>
 </a>
-<SchoolChatbot />
 </main>
 );
 }

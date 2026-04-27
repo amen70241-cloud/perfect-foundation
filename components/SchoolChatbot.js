@@ -13,7 +13,7 @@ export default function SchoolChatbot() {
     const q = question.toLowerCase();
 
     if (q.includes("admission") || q.includes("apply")) {
-      return "Admissions are open for Creche, Nursery, KG, Primary and JHS. You can download the admission form or contact the school through WhatsApp.";
+      return "Admissions are open for Creche, Nursery, KG, Primary and JHS. You can download the admission form from the Downloads section or contact the school through WhatsApp.";
     }
 
     if (q.includes("programme") || q.includes("class")) {
@@ -55,22 +55,19 @@ export default function SchoolChatbot() {
   }
 
   return (
-    <>
-      <input id="pfa-chat-toggle" type="checkbox" className="hidden peer" />
+    <details className="fixed bottom-6 left-6 z-[999999] group">
+      <summary className="list-none cursor-pointer">
+        <div className="w-20 h-20 rounded-full bg-[#071326] shadow-2xl flex items-center justify-center relative overflow-hidden border border-cyan-300/40">
+          <span className="absolute inset-0 bg-cyan-400/20 animate-ping rounded-full"></span>
+          <span className="absolute w-16 h-16 rounded-full border-2 border-cyan-300 animate-spin"></span>
+          <span className="relative z-10 text-3xl">🎓</span>
+        </div>
+      </summary>
 
-      <div className="hidden peer-checked:block fixed bottom-24 left-4 right-4 z-[99999] max-w-sm mx-auto bg-white rounded-[2rem] shadow-2xl border overflow-hidden">
-        <div className="bg-[#0f172a] text-white p-5 flex justify-between items-center">
-          <div>
-            <h3 className="text-xl font-black">PFA School Assistant</h3>
-            <p className="text-sm text-gray-300">Ask about the school</p>
-          </div>
-
-          <label
-            htmlFor="pfa-chat-toggle"
-            className="text-3xl font-black cursor-pointer"
-          >
-            ×
-          </label>
+      <div className="absolute bottom-24 left-0 w-[90vw] max-w-sm bg-white rounded-[2rem] shadow-2xl border overflow-hidden">
+        <div className="bg-[#071326] text-white p-5">
+          <h3 className="text-xl font-black">PFA School Assistant</h3>
+          <p className="text-sm text-gray-300">Ask about the school</p>
         </div>
 
         <div className="h-80 overflow-y-auto p-5 space-y-4 bg-[#f8f6ef]">
@@ -104,13 +101,6 @@ export default function SchoolChatbot() {
           </button>
         </form>
       </div>
-
-      <label
-        htmlFor="pfa-chat-toggle"
-        className="fixed bottom-6 left-6 z-[99999] w-16 h-16 rounded-full bg-[#0f172a] text-white shadow-2xl text-2xl hover:scale-110 transition flex items-center justify-center cursor-pointer"
-      >
-        🎓
-      </label>
-    </>
+    </details>
   );
 }

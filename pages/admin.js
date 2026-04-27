@@ -38,10 +38,12 @@ export default function Admin() {
   const [calendar, setCalendar] = useState([]);
 
   const [studentName, setStudentName] = useState("");
+  const [studentGender, setStudentGender] = useState("");
   const [studentClass, setStudentClass] = useState("");
   const [editingStudentId, setEditingStudentId] = useState(null);
 
   const [staffName, setStaffName] = useState("");
+  const [staffGender, setStaffGender] = useState("");
   const [staffRole, setStaffRole] = useState("");
   const [staffClass, setStaffClass] = useState("");
   const [staffPhone, setStaffPhone] = useState("");
@@ -114,6 +116,7 @@ export default function Admin() {
       .update({
         full_name: studentName,
         class: studentClass,
+        gender: studentGender,
       })
       .eq("id", editingStudentId);
 

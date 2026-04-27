@@ -133,6 +133,7 @@ export default function Admin() {
         full_name: studentName,
         role: "student",
         class_name: studentClass,
+        gender: studentGender,
       }),
     });
 

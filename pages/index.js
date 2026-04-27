@@ -7,7 +7,16 @@ export default function Home() {
   const [websiteSettings, setWebsiteSettings] = useState(null);
 const [websiteDownloads, setWebsiteDownloads] = useState([]);
 const [websiteEvents, setWebsiteEvents] = useState([]);
+const [admissionForm, setAdmissionForm] = useState({
+  child_name: "",
+  child_class: "",
+  parent_name: "",
+  parent_phone: "",
+  parent_email: "",
+  message: "",
+});
 
+const [admissionMessage, setAdmissionMessage] = useState("");
 useEffect(() => {
   loadWebsiteContent();
 }, []);
@@ -49,6 +58,37 @@ const schoolLocation =
 
 const cleanWhatsApp = whatsappNumber.replace(/\D/g, "");
 const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20make%20an%20enquiry.`;
+ async function submitAdmissionForm(e) {
+  e.preventDefault();
+  setAdmissionMessage("Submitting...");
+
+  const { error } = await supabase.from("admission_enquiries").insert([
+    {
+      child_name: admissionForm.child_name,
+      child_class: admissionForm.child_class,
+      parent_name: admissionForm.parent_name,
+      parent_phone: admissionForm.parent_phone,
+      parent_email: admissionForm.parent_email,
+      message: admissionForm.message,
+      status: "New",
+    },
+  ]);
+
+  if (error) {
+    setAdmissionMessage(error.message);
+    return;
+  }
+
+  setAdmissionMessage("Admission enquiry submitted successfully. The school will contact you.");
+  setAdmissionForm({
+    child_name: "",
+    child_class: "",
+    parent_name: "",
+    parent_phone: "",
+    parent_email: "",
+    message: "",
+  });
+}
   return (
     <main className="bg-[#f8f6ef] text-[#1e293b]">
       {/* HEADER */}
@@ -744,6 +784,101 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
       </div>
     </form>
   </div>
+     <div className="mt-14 bg-white rounded-[2rem] p-8 shadow border border-gray-100 text-left">
+  <h3 className="text-3xl font-black text-[#0f172a]">
+    Online Admission Enquiry
+  </h3>
+
+  <p className="mt-3 text-[#64748b]">
+    Fill this form and the school office will contact you.
+  </p>
+
+  {admissionMessage && (
+    <p className="mt-4 font-bold text-[#d9a514]">{admissionMessage}</p>
+  )}
+
+  <form onSubmit={submitAdmissionForm} className="mt-6 grid gap-4 md:grid-cols-2">
+    <input
+      value={admissionForm.child_name}
+      onChange={(e) =>
+        setAdmissionForm({ ...admissionForm, child_name: e.target.value })
+      }
+      placeholder="Child's full name"
+      required
+      className="border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+    />
+
+    <select
+      value={admissionForm.child_class}
+      onChange={(e) =>
+        setAdmissionForm({ ...admissionForm, child_class: e.target.value })
+      }
+      className="border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+    >
+      <option value="">Class applying for</option>
+      <option>Creche</option>
+      <option>Nursery</option>
+      <option>KG 1</option>
+      <option>KG 2</option>
+      <option>Primary 1</option>
+      <option>Primary 2</option>
+      <option>Primary 3</option>
+      <option>Primary 4</option>
+      <option>Primary 5</option>
+      <option>Primary 6</option>
+      <option>JHS 1</option>
+      <option>JHS 2</option>
+      <option>JHS 3</option>
+    </select>
+
+    <input
+      value={admissionForm.parent_name}
+      onChange={(e) =>
+        setAdmissionForm({ ...admissionForm, parent_name: e.target.value })
+      }
+      placeholder="Parent / Guardian name"
+      required
+      className="border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+    />
+
+    <input
+      value={admissionForm.parent_phone}
+      onChange={(e) =>
+        setAdmissionForm({ ...admissionForm, parent_phone: e.target.value })
+      }
+      placeholder="Parent phone / WhatsApp"
+      required
+      className="border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+    />
+
+    <input
+      type="email"
+      value={admissionForm.parent_email}
+      onChange={(e) =>
+        setAdmissionForm({ ...admissionForm, parent_email: e.target.value })
+      }
+      placeholder="Parent email (optional)"
+      className="border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+    />
+
+    <textarea
+      value={admissionForm.message}
+      onChange={(e) =>
+        setAdmissionForm({ ...admissionForm, message: e.target.value })
+      }
+      placeholder="Message / enquiry"
+      rows="4"
+      className="md:col-span-2 border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+    />
+
+    <button
+      type="submit"
+      className="md:col-span-2 bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black"
+    >
+      Submit Admission Enquiry
+    </button>
+  </form>
+</div>      
             </section>
 {/* EVENTS & ACHIEVEMENTS */}
 <section className="scroll-fade px-6 py-24 bg-[#f8f6ef]">

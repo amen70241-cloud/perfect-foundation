@@ -383,7 +383,15 @@ async function promoteClass(currentClass) {
                 required
                 className="input"
               />
-
+              <select
+  value={studentGender}
+  onChange={(e) => setStudentGender(e.target.value)}
+  className="w-full border border-gray-300 rounded-xl p-3 mb-3"
+>
+  <option value="">Select gender</option>
+  <option value="Male">Male</option>
+  <option value="Female">Female</option>
+</select>
               <select
                 value={studentClass}
                 onChange={(e) => setStudentClass(e.target.value)}

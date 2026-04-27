@@ -652,7 +652,10 @@ async function promoteClass(currentClass) {
   <SimpleList title="Announcements" items={announcements} />
   <SimpleList title="Calendar Events" items={calendar} />
 </div>
-      </section>
+
+</div>
+
+</section>
 
       <style jsx>{`
         .input {

@@ -442,6 +442,22 @@ export default function Teacher() {
             </div>
           </div>
         </div>
+              <div className="mt-10 bg-white p-6 rounded-2xl shadow">
+  <h2 className="text-xl font-bold mb-4">Class Students</h2>
+
+  {classStudents.length === 0 ? (
+    <p className="text-gray-500">No students found</p>
+  ) : (
+    classStudents.map((student) => (
+      <div key={student.id} className="border-b py-2">
+        <p className="font-bold">{student.full_name}</p>
+        <p className="text-xs text-gray-500">
+          {student.gender || "Not set"}
+        </p>
+      </div>
+    ))
+  )}
+</div>
       </section>
     </main>
   );

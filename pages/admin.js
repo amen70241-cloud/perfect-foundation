@@ -501,9 +501,14 @@ async function promoteClass(currentClass) {
                   {group.students.map((student) => (
                     <div
                       key={student.id}
-                      className="flex justify-between items-center border-b pb-3"
+                      className="flex justify-between items-start border-b pb-3"
                     >
-                      <span className="font-bold">{student.full_name}</span>
+                      <div>
+  <p className="font-bold">{student.full_name}</p>
+  <p className="text-xs text-gray-500">
+    {student.class} • {student.gender || "Not set"}
+  </p>
+</div>
                       <button
                         onClick={() => editStudent(student)}
                         className="text-sm font-bold text-[#0f172a]"

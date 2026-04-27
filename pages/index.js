@@ -683,7 +683,7 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
         ADMISSIONS
       </p>
 
-      <h2 className="mt-6 text-4xl md:text-5xl font-extrabold tracking-tight leading-tight">
+      <h2 className="mt-6 text-5xl md:text-6xl font-extrabold leading-tight">
         Join the Perfect Foundation Academy family.
       </h2>
 
@@ -693,193 +693,143 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
         first day in class.
       </p>
 
-      <div className="mt-10 grid gap-5">
+      <div className="mt-10 grid gap-4">
         <a
-          href="{whatsappLink}?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child."
-          target="_blank"
-          rel="noreferrer"
-          className="bg-[#f4b41a] text-[#0f172a] text-center py-5 rounded-2xl text-xl font-black shadow-xl hover:shadow-2xl transition"
+          href="#admissions"
+          className="bg-[#f4b41a] text-[#0f172a] text-center py-4 rounded-2xl font-black"
         >
           Start Admission Enquiry →
         </a>
 
         <a
-          href="{whatsappLink}?text=Hello%20Perfect%20Foundation%20Academy%2C%20I%20would%20like%20to%20enquire%20about%20admission%20for%20my%20child."
+          href={whatsappLink}
           target="_blank"
-          rel="noreferrer"
-          className="bg-[#20b957] text-white text-center py-5 rounded-2xl text-xl font-black shadow-xl hover:shadow-2xl transition"
+          rel="noopener noreferrer"
+          className="bg-[#20b957] text-white text-center py-4 rounded-2xl font-black"
         >
           💬 Enquire on WhatsApp
         </a>
       </div>
     </div>
 
-    <form
-  action="https://formspree.io/f/mvzdyaln"
-  method="POST"
-  className="bg-white rounded-[2rem] p-8 shadow-2xl text-[#0f172a]"
->
-      <h3 className="text-3xl font-black tracking-tight">
+    <div className="bg-white text-[#0f172a] rounded-[2rem] p-8 shadow-2xl">
+      <h3 className="text-3xl font-black">
         Admission Enquiry Form
       </h3>
 
       <p className="mt-3 text-[#64748b]">
-        Fill this form and the school will contact you.
+        Fill this form and the school office will contact you.
       </p>
 
-      <div className="mt-8 grid gap-5">
-        <input
-  name="parent_name"
-  required
-  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
-  placeholder="Parent / Guardian Name"
-/>
+      {admissionMessage && (
+        <p className="mt-4 font-bold text-[#d9a514]">
+          {admissionMessage}
+        </p>
+      )}
 
+      <form onSubmit={submitAdmissionForm} className="mt-8 grid gap-4">
         <input
-  name="phone"
-  required
-  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
-  placeholder="Phone Number"
-/>
-
-       <input
-  name="child_name"
-  required
-  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
-  placeholder="Child’s Name"
-/>
-
-        <input
-  name="child_age"
-  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
-  placeholder="Child’s Age"
-/>
+          value={admissionForm.child_name}
+          onChange={(e) =>
+            setAdmissionForm({
+              ...admissionForm,
+              child_name: e.target.value,
+            })
+          }
+          placeholder="Child's full name"
+          required
+          className="w-full border border-gray-200 rounded-2xl p-4 outline-none text-[#0f172a] placeholder:text-gray-400 focus:border-[#f4b41a]"
+        />
 
         <select
-  name="desired_class"
-  required
-  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
->
-  <option>Select desired class</option>
-  <option>Creche</option>
-  <option>Nursery</option>
-  <option>Kindergarten</option>
-  <option>Primary School</option>
-  <option>Junior High School</option>
-</select>
+          value={admissionForm.child_class}
+          onChange={(e) =>
+            setAdmissionForm({
+              ...admissionForm,
+              child_class: e.target.value,
+            })
+          }
+          required
+          className="w-full border border-gray-200 rounded-2xl p-4 outline-none text-[#0f172a] focus:border-[#f4b41a]"
+        >
+          <option value="">Select desired class</option>
+          <option value="Creche">Creche</option>
+          <option value="Nursery">Nursery</option>
+          <option value="KG 1">KG 1</option>
+          <option value="KG 2">KG 2</option>
+          <option value="Primary 1">Primary 1</option>
+          <option value="Primary 2">Primary 2</option>
+          <option value="Primary 3">Primary 3</option>
+          <option value="Primary 4">Primary 4</option>
+          <option value="Primary 5">Primary 5</option>
+          <option value="Primary 6">Primary 6</option>
+          <option value="JHS 1">JHS 1</option>
+          <option value="JHS 2">JHS 2</option>
+          <option value="JHS 3">JHS 3</option>
+        </select>
+
+        <input
+          value={admissionForm.parent_name}
+          onChange={(e) =>
+            setAdmissionForm({
+              ...admissionForm,
+              parent_name: e.target.value,
+            })
+          }
+          placeholder="Parent / Guardian name"
+          required
+          className="w-full border border-gray-200 rounded-2xl p-4 outline-none text-[#0f172a] placeholder:text-gray-400 focus:border-[#f4b41a]"
+        />
+
+        <input
+          value={admissionForm.parent_phone}
+          onChange={(e) =>
+            setAdmissionForm({
+              ...admissionForm,
+              parent_phone: e.target.value,
+            })
+          }
+          placeholder="Parent phone / WhatsApp"
+          required
+          className="w-full border border-gray-200 rounded-2xl p-4 outline-none text-[#0f172a] placeholder:text-gray-400 focus:border-[#f4b41a]"
+        />
+
+        <input
+          type="email"
+          value={admissionForm.parent_email}
+          onChange={(e) =>
+            setAdmissionForm({
+              ...admissionForm,
+              parent_email: e.target.value,
+            })
+          }
+          placeholder="Parent email optional"
+          className="w-full border border-gray-200 rounded-2xl p-4 outline-none text-[#0f172a] placeholder:text-gray-400 focus:border-[#f4b41a]"
+        />
 
         <textarea
-  name="message"
-  className="w-full border border-gray-200 rounded-2xl p-4 text-lg outline-none focus:border-[#f4b41a]"
-  rows="4"
-  placeholder="Message"
-/>
+          value={admissionForm.message}
+          onChange={(e) =>
+            setAdmissionForm({
+              ...admissionForm,
+              message: e.target.value,
+            })
+          }
+          placeholder="Message / enquiry"
+          rows="4"
+          className="w-full border border-gray-200 rounded-2xl p-4 outline-none text-[#0f172a] placeholder:text-gray-400 focus:border-[#f4b41a]"
+        />
 
-       <button
-  type="button"
-          className="bg-[#f4b41a] text-[#0f172a] py-5 rounded-2xl text-xl font-black shadow-lg hover:shadow-xl transition"
+        <button
+          type="submit"
+          className="bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black"
         >
-          Send Enquiry ✈
+          Submit Admission Enquiry
         </button>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-     <div className="mt-14 bg-white rounded-[2rem] p-8 shadow border border-gray-100 text-left">
-  <h3 className="text-3xl font-black text-[#0f172a]">
-    Online Admission Enquiry
-  </h3>
-
-  <p className="mt-3 text-[#64748b]">
-    Fill this form and the school office will contact you.
-  </p>
-
-  {admissionMessage && (
-    <p className="mt-4 font-bold text-[#d9a514]">{admissionMessage}</p>
-  )}
-
-  <form onSubmit={submitAdmissionForm} className="mt-6 grid gap-4 md:grid-cols-2">
-    <input
-      value={admissionForm.child_name}
-      onChange={(e) =>
-        setAdmissionForm({ ...admissionForm, child_name: e.target.value })
-      }
-      placeholder="Child's full name"
-      required
-      className="border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
-    />
-
-    <select
-      value={admissionForm.child_class}
-      onChange={(e) =>
-        setAdmissionForm({ ...admissionForm, child_class: e.target.value })
-      }
-      className="border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
-    >
-      <option value="">Class applying for</option>
-      <option>Creche</option>
-      <option>Nursery</option>
-      <option>KG 1</option>
-      <option>KG 2</option>
-      <option>Primary 1</option>
-      <option>Primary 2</option>
-      <option>Primary 3</option>
-      <option>Primary 4</option>
-      <option>Primary 5</option>
-      <option>Primary 6</option>
-      <option>JHS 1</option>
-      <option>JHS 2</option>
-      <option>JHS 3</option>
-    </select>
-
-    <input
-      value={admissionForm.parent_name}
-      onChange={(e) =>
-        setAdmissionForm({ ...admissionForm, parent_name: e.target.value })
-      }
-      placeholder="Parent / Guardian name"
-      required
-      className="border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
-    />
-
-    <input
-      value={admissionForm.parent_phone}
-      onChange={(e) =>
-        setAdmissionForm({ ...admissionForm, parent_phone: e.target.value })
-      }
-      placeholder="Parent phone / WhatsApp"
-      required
-      className="border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
-    />
-
-    <input
-      type="email"
-      value={admissionForm.parent_email}
-      onChange={(e) =>
-        setAdmissionForm({ ...admissionForm, parent_email: e.target.value })
-      }
-      placeholder="Parent email (optional)"
-      className="border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
-    />
-
-    <textarea
-      value={admissionForm.message}
-      onChange={(e) =>
-        setAdmissionForm({ ...admissionForm, message: e.target.value })
-      }
-      placeholder="Message / enquiry"
-      rows="4"
-      className="md:col-span-2 border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
-    />
-
-    <button
-      type="submit"
-      className="md:col-span-2 bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black"
-    >
-      Submit Admission Enquiry
-    </button>
-  </form>
-</div>      
-            </section>
+</section>
 {/* EVENTS & ACHIEVEMENTS */}
 <section className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
   <div className="max-w-6xl mx-auto">

@@ -628,50 +628,30 @@ async function promoteClass(currentClass) {
 
     {enquiries.map((item) => (
       <div key={item.id} className="border-b pb-4">
-        <div className="flex justify-between gap-4">
-          <div>
-            <p className="font-black text-lg">{item.child_name}</p>
-            <p className="text-sm text-[#64748b]">
-              Applying for: {item.child_class || "Not selected"}
-            </p>
-          </div>
+        <p className="font-black text-lg">{item.child_name}</p>
+        <p className="text-sm text-[#64748b]">
+          Applying for: {item.child_class || "Not selected"}
+        </p>
+        <p><span className="font-bold">Parent:</span> {item.parent_name}</p>
+        <p><span className="font-bold">Phone:</span> {item.parent_phone}</p>
 
-          <span className="bg-[#f4b41a]/20 text-[#9a6b00] px-4 py-2 rounded-full text-sm font-bold h-fit">
-            {item.status || "New"}
-          </span>
-        </div>
+        {item.parent_email && (
+          <p><span className="font-bold">Email:</span> {item.parent_email}</p>
+        )}
 
-        <div className="mt-3 text-sm text-[#0f172a] space-y-1">
-          <p>
-            <span className="font-bold">Parent:</span> {item.parent_name}
-          </p>
-
-          <p>
-            <span className="font-bold">Phone:</span> {item.parent_phone}
-          </p>
-
-          {item.parent_email && (
-            <p>
-              <span className="font-bold">Email:</span> {item.parent_email}
-            </p>
-          )}
-
-          {item.message && (
-            <p>
-              <span className="font-bold">Message:</span> {item.message}
-            </p>
-          )}
-        </div>
+        {item.message && (
+          <p><span className="font-bold">Message:</span> {item.message}</p>
+        )}
       </div>
     ))}
   </div>
 </div>
 
-        <div className="mt-10 grid gap-8 md:grid-cols-3">
-          <List title="Staff List" items={staff} editFn={editStaff} />
-          <SimpleList title="Announcements" items={announcements} />
-          <SimpleList title="Calendar Events" items={calendar} />
-        </div>
+<div className="mt-10 grid gap-8 md:grid-cols-3">
+  <List title="Staff List" items={staff} editFn={editStaff} />
+  <SimpleList title="Announcements" items={announcements} />
+  <SimpleList title="Calendar Events" items={calendar} />
+</div>
       </section>
 
       <style jsx>{`

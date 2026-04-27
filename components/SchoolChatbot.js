@@ -5,7 +5,7 @@ export default function SchoolChatbot() {
   const [messages, setMessages] = useState([
     {
       from: "bot",
-      text: "Hello 👋 I’m the Perfect Foundation Academy assistant. Ask me about admissions, programmes, downloads, fees, location, or contact.",
+      text: "Hello 👋 I’m the Perfect Foundation Academy assistant. Ask me about admissions, programmes, fees, downloads, location, or portal login.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -14,47 +14,48 @@ export default function SchoolChatbot() {
     const q = question.toLowerCase();
 
     if (q.includes("admission") || q.includes("apply") || q.includes("enroll")) {
-      return "Admissions are open for Creche, Nursery, KG, Primary and JHS. You can visit the school office, call/WhatsApp the school, or download the admission form from the Downloads section.";
+      return "Admissions are open for Creche, Nursery, KG, Primary and JHS. You can download the admission form from the Downloads section or contact the school office through WhatsApp.";
     }
 
     if (q.includes("programme") || q.includes("class") || q.includes("grade")) {
-      return "Perfect Foundation Academy offers Creche, Nursery, Kindergarten, Primary and JHS education with strong focus on academics, discipline, faith and character formation.";
+      return "Perfect Foundation Academy offers Creche, Nursery, KG, Primary and JHS education with strong focus on academics, discipline, faith and character formation.";
     }
 
-    if (q.includes("fees") || q.includes("fee") || q.includes("payment")) {
-      return "For school fees, please contact the school office or accountant. Parents can also use the student/parent portal to view fee status when records are updated.";
+    if (q.includes("fee") || q.includes("fees") || q.includes("payment")) {
+      return "For school fees, please contact the school office or accountant. Parents can also check fee status through the student/parent portal when records are updated.";
     }
 
     if (q.includes("location") || q.includes("where") || q.includes("address")) {
-      return "The school is located at Oshuman, Top Radio area, Accra, Ghana. Please contact the school directly for detailed directions.";
-    }
-
-    if (q.includes("contact") || q.includes("phone") || q.includes("whatsapp")) {
-      return "You can contact Perfect Foundation Academy through the WhatsApp button on this website or through the contact details in the footer.";
+      return "Perfect Foundation Academy is located at Oshuman, Top Radio area, Accra, Ghana.";
     }
 
     if (q.includes("download") || q.includes("prospectus") || q.includes("calendar") || q.includes("form")) {
-      return "You can find documents like admission forms, prospectus and academic calendar in the Downloads section of the website.";
+      return "Please scroll to the Downloads section to access the prospectus, admission form, academic calendar and other school documents.";
     }
 
     if (q.includes("portal") || q.includes("login")) {
-      return "Use Portal Login to access Admin, Teacher, Accountant, or Student/Parent portals. Students and staff receive login details from the school administrator.";
+      return "Click Portal Login to access Admin, Teacher, Accountant, or Student/Parent portals. Login details are provided by the school administrator.";
     }
 
-    return "Thanks for your question. For detailed help, please contact the school through WhatsApp or visit the admissions office. You can also ask me about admissions, fees, programmes, downloads, location, or portal login.";
+    if (q.includes("contact") || q.includes("phone") || q.includes("whatsapp")) {
+      return "You can contact the school using the WhatsApp button or the contact details in the footer section.";
+    }
+
+    return "Thank you for your question. You can ask me about admissions, programmes, fees, downloads, location, contact, or portal login.";
   }
 
   function sendMessage(e) {
     e.preventDefault();
+
     if (!input.trim()) return;
 
-    const userMessage = input.trim();
-    const reply = getReply(userMessage);
+    const userText = input.trim();
+    const botReply = getReply(userText);
 
     setMessages((prev) => [
       ...prev,
-      { from: "user", text: userMessage },
-      { from: "bot", text: reply },
+      { from: "user", text: userText },
+      { from: "bot", text: botReply },
     ]);
 
     setInput("");
@@ -63,10 +64,20 @@ export default function SchoolChatbot() {
   return (
     <>
       {open && (
-        <div className="fixed bottom-28 right-6 z-[60] w-[90vw] max-w-sm bg-white rounded-[2rem] shadow-2xl border overflow-hidden">
-          <div className="bg-[#0f172a] text-white p-5">
-            <h3 className="text-xl font-black">PFA Assistant</h3>
-            <p className="text-sm text-gray-300">Ask about the school</p>
+        <div className="fixed bottom-24 left-4 right-4 z-[9999] max-w-sm bg-white rounded-[2rem] shadow-2xl border overflow-hidden mx-auto md:left-6 md:right-auto md:w-96">
+          <div className="bg-[#0f172a] text-white p-5 flex justify-between items-center">
+            <div>
+              <h3 className="text-xl font-black">PFA School Assistant</h3>
+              <p className="text-sm text-gray-300">Ask about the school</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="text-3xl font-black"
+            >
+              ×
+            </button>
           </div>
 
           <div className="h-80 overflow-y-auto p-5 space-y-4 bg-[#f8f6ef]">
@@ -88,10 +99,14 @@ export default function SchoolChatbot() {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your question..."
+              placeholder="Ask a question..."
               className="flex-1 border rounded-2xl px-4 py-3 outline-none focus:border-[#f4b41a]"
             />
-            <button className="bg-[#0f172a] text-white px-4 rounded-2xl font-bold">
+
+            <button
+              type="submit"
+              className="bg-[#0f172a] text-white px-4 rounded-2xl font-bold"
+            >
               Send
             </button>
           </form>
@@ -99,10 +114,11 @@ export default function SchoolChatbot() {
       )}
 
       <button
-        onClick={() => setOpen(!open)}
-        className="fixed bottom-6 left-6 z-[70] w-16 h-16 rounded-full bg-[#0f172a] text-white shadow-2xl text-2xl hover:scale-110 transition"
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className="fixed bottom-6 left-6 z-[9999] w-16 h-16 rounded-full bg-[#0f172a] text-white shadow-2xl text-2xl hover:scale-110 transition flex items-center justify-center"
       >
-        {open ? "×" : "🤖"}
+        🎓
       </button>
     </>
   );

@@ -82,7 +82,7 @@ export default function Admin() {
       .order("created_at", { ascending: false });
 
     const { data: enquiriesData } = await supabase
-      .from("admissions_enquiries")
+      .from("admission_enquiries")
       .select("*")
       .order("created_at", { ascending: false });
 
@@ -615,22 +615,54 @@ async function promoteClass(currentClass) {
           </form>
 
           <div className="bg-white rounded-[2rem] p-8 shadow border">
-            <h2 className="text-2xl font-black">Admissions Enquiries</h2>
+           <div className="bg-white rounded-[2rem] p-8 shadow border">
+  <h2 className="text-2xl font-black">Admissions Enquiries</h2>
+  <p className="mt-2 text-[#64748b]">
+    New admission enquiries submitted from the public website.
+  </p>
 
-            <div className="mt-6 space-y-4">
-              {enquiries.length === 0 && (
-                <p className="text-[#64748b]">No enquiries yet.</p>
-              )}
+  <div className="mt-6 space-y-4">
+    {enquiries.length === 0 && (
+      <p className="text-[#64748b]">No enquiries yet.</p>
+    )}
 
-              {enquiries.map((item) => (
-                <div key={item.id} className="border-b pb-4">
-                  <p className="font-black">{item.parent_name}</p>
-                  <p className="text-sm text-[#64748b]">
-                    {item.child_name} • {item.desired_class}
-                  </p>
-                  <p className="text-sm">{item.phone}</p>
-                </div>
-              ))}
+    {enquiries.map((item) => (
+      <div key={item.id} className="border-b pb-4">
+        <div className="flex justify-between gap-4">
+          <div>
+            <p className="font-black text-lg">{item.child_name}</p>
+            <p className="text-sm text-[#64748b]">
+              Applying for: {item.child_class || "Not selected"}
+            </p>
+          </div>
+
+          <span className="bg-[#f4b41a]/20 text-[#9a6b00] px-4 py-2 rounded-full text-sm font-bold h-fit">
+            {item.status || "New"}
+          </span>
+        </div>
+
+        <div className="mt-3 text-sm text-[#0f172a] space-y-1">
+          <p>
+            <span className="font-bold">Parent:</span> {item.parent_name}
+          </p>
+          <p>
+            <span className="font-bold">Phone:</span> {item.parent_phone}
+          </p>
+          {item.parent_email && (
+            <p>
+              <span className="font-bold">Email:</span> {item.parent_email}
+            </p>
+          )}
+          {item.message && (
+            <p>
+              <span className="font-bold">Message:</span> {item.message}
+            </p>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
             </div>
           </div>
         </div>

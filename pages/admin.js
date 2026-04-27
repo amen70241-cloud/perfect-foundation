@@ -614,9 +614,9 @@ async function promoteClass(currentClass) {
             </div>
           </form>
 
-          <div className="bg-white rounded-[2rem] p-8 shadow border">
-           <div className="bg-white rounded-[2rem] p-8 shadow border">
+        <div className="bg-white rounded-[2rem] p-8 shadow border">
   <h2 className="text-2xl font-black">Admissions Enquiries</h2>
+
   <p className="mt-2 text-[#64748b]">
     New admission enquiries submitted from the public website.
   </p>
@@ -645,14 +645,17 @@ async function promoteClass(currentClass) {
           <p>
             <span className="font-bold">Parent:</span> {item.parent_name}
           </p>
+
           <p>
             <span className="font-bold">Phone:</span> {item.parent_phone}
           </p>
+
           {item.parent_email && (
             <p>
               <span className="font-bold">Email:</span> {item.parent_email}
             </p>
           )}
+
           {item.message && (
             <p>
               <span className="font-bold">Message:</span> {item.message}
@@ -663,9 +666,6 @@ async function promoteClass(currentClass) {
     ))}
   </div>
 </div>
-            </div>
-          </div>
-        </div>
 
         <div className="mt-10 grid gap-8 md:grid-cols-3">
           <List title="Staff List" items={staff} editFn={editStaff} />

@@ -1065,13 +1065,14 @@ function List({ title, items, editFn }) {
               Edit
             </button>
 {deleteFn && (
-                <button
-  type="button"
-  onClick={() => deleteFn(item)}
-  className="ml-3 mt-2 text-sm font-bold text-red-600"
->
-  Delete
-</button>
+  <button
+    type="button"
+    onClick={() => deleteFn(item)}
+    className="ml-3 mt-2 text-sm font-bold text-red-600"
+  >
+    Delete
+  </button>
+)}
           </div>
         ))}
       </div>

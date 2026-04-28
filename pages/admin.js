@@ -15,20 +15,7 @@ const classes = [
   "JHS 2",
   "JHS 3",
 ];
-const promotionMap = {
-  Creche: "Nursery",
-  Nursery: "Kindergarten",
-  Kindergarten: "Primary 1",
-  "Primary 1": "Primary 2",
-  "Primary 2": "Primary 3",
-  "Primary 3": "Primary 4",
-  "Primary 4": "Primary 5",
-  "Primary 5": "Primary 6",
-  "Primary 6": "JHS 1",
-  "JHS 1": "JHS 2",
-  "JHS 2": "JHS 3",
-  "JHS 3": "Completed",
-};
+
 const promotionMap = {
   Creche: "Nursery",
   Nursery: "Kindergarten",

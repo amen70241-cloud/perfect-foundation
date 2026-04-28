@@ -62,6 +62,7 @@ export default function Admin() {
   const [galleryTitle, setGalleryTitle] = useState("");
   const [galleryUrl, setGalleryUrl] = useState("");
   const [galleryCategory, setGalleryCategory] = useState("");
+  const [editingGalleryId, setEditingGalleryId] = useState(null);
 
   const [calendarTitle, setCalendarTitle] = useState("");
   const [calendarDate, setCalendarDate] = useState("");
@@ -361,26 +362,68 @@ async function deleteStudent(student) {
     loadData();
   }
 
-  async function addGalleryImage(e) {
-    e.preventDefault();
+ async function addGalleryImage(e) {
+  e.preventDefault();
+  setMessage("");
 
-    const { error } = await supabase.from("gallery_images").insert([
-  {
-    title: galleryTitle,
-    image_url: galleryUrl,
-    category: galleryCategory,
-  },
-]);
+  if (editingGalleryId) {
+    const { error } = await supabase
+      .from("gallery_images")
+      .update({
+        title: galleryTitle,
+        image_url: galleryUrl,
+        category: galleryCategory,
+      })
+      .eq("id", editingGalleryId);
 
     if (error) return setMessage(error.message);
 
-    setGalleryTitle("");
-    setGalleryUrl("");
-    setGalleryCategory("");
-    setMessage("Gallery image added.");
-    loadData();
+    setMessage("Gallery photo updated.");
+  } else {
+    const { error } = await supabase.from("gallery_images").insert([
+      {
+        title: galleryTitle,
+        image_url: galleryUrl,
+        category: galleryCategory,
+      },
+    ]);
+
+    if (error) return setMessage(error.message);
+
+    setMessage("Gallery photo added.");
   }
 
+  setGalleryTitle("");
+  setGalleryUrl("");
+  setGalleryCategory("");
+  setEditingGalleryId(null);
+  loadData();
+}
+ function editGalleryImage(item) {
+  setEditingGalleryId(item.id);
+  setGalleryTitle(item.title || "");
+  setGalleryUrl(item.image_url || "");
+  setGalleryCategory(item.category || "");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+async function deleteGalleryImage(item) {
+  const confirmDelete = window.confirm(
+    `Delete gallery photo "${item.title || "Untitled"}"?`
+  );
+
+  if (!confirmDelete) return;
+
+  const { error } = await supabase
+    .from("gallery_images")
+    .delete()
+    .eq("id", item.id);
+
+  if (error) return setMessage(error.message);
+
+  setMessage("Gallery photo deleted.");
+  loadData();
+}
   async function addCalendarEvent(e) {
     e.preventDefault();
 
@@ -711,7 +754,58 @@ async function deleteStudent(student) {
               <button className="btn-dark">Create Announcement</button>
             </div>
           </form>
+         <div className="mt-8">
+  <h3 className="text-lg font-black text-[#0f172a] mb-4">
+    Gallery Photos
+  </h3>
 
+  {gallery.length === 0 && (
+    <p className="text-[#64748b]">No gallery photos added yet.</p>
+  )}
+
+  <div className="grid gap-4 md:grid-cols-2">
+    {gallery.map((item) => (
+      <div
+        key={item.id}
+        className="border rounded-2xl p-3 bg-white"
+      >
+        {item.image_url && (
+          <img
+            src={item.image_url}
+            alt={item.title || "Gallery photo"}
+            className="w-full h-40 object-cover rounded-xl mb-3"
+          />
+        )}
+
+        <p className="font-bold text-[#0f172a]">
+          {item.title || "Untitled"}
+        </p>
+
+        <p className="text-sm text-[#64748b]">
+          {item.category || "No category"}
+        </p>
+
+        <div className="flex gap-4 mt-3">
+          <button
+            type="button"
+            onClick={() => editGalleryImage(item)}
+            className="text-sm font-bold text-[#0f172a]"
+          >
+            Edit
+          </button>
+
+          <button
+            type="button"
+            onClick={() => deleteGalleryImage(item)}
+            className="text-sm font-bold text-red-600"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
           <form
             onSubmit={addGalleryImage}
             className="bg-white rounded-[2rem] p-8 shadow border"
@@ -758,7 +852,7 @@ async function deleteStudent(student) {
   <option value="Educational Trips">Educational Trips</option>
   <option value="PTA / Parent Engagement">PTA / Parent Engagement</option>
 </select>
-              <button className="btn-dark">Add Gallery Photo</button>
+              <button className="btn-dark">{editingGalleryId ? "Update Gallery Photo" : "Add Gallery Photo"}</button>
             </div>
           </form>
         </div>

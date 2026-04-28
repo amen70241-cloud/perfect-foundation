@@ -7,34 +7,33 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [galleryPreview, setGalleryPreview] = useState([]);
   const [websiteSettings, setWebsiteSettings] = useState(null);
-const [websiteDownloads, setWebsiteDownloads] = useState([]);
-const [websiteEvents, setWebsiteEvents] = useState([]);
-const [admissionForm, setAdmissionForm] = useState({
- useEffect(() => {
-  loadGalleryPreview();
-}, []);
+  const [websiteDownloads, setWebsiteDownloads] = useState([]);
+  const [websiteEvents, setWebsiteEvents] = useState([]);
 
-async function loadGalleryPreview() {
-  const { data } = await supabase
-    .from("gallery_images")
-    .select("*")
-    .limit(6);
+  const [admissionForm, setAdmissionForm] = useState({
+    child_name: "",
+    child_class: "",
+    parent_name: "",
+    parent_phone: "",
+    parent_email: "",
+    message: "",
+  });
 
-  setGalleryPreview(data || []);
-}
-  child_name: "",
-  child_class: "",
-  parent_name: "",
-  parent_phone: "",
-  parent_email: "",
-  message: "",
-});
+  const [admissionMessage, setAdmissionMessage] = useState("");
 
-const [admissionMessage, setAdmissionMessage] = useState("");
-useEffect(() => {
-  loadWebsiteContent();
-}, []);
+  useEffect(() => {
+    loadGalleryPreview();
+    loadWebsiteContent();
+  }, []);
 
+  async function loadGalleryPreview() {
+    const { data } = await supabase
+      .from("gallery_images")
+      .select("*")
+      .limit(6);
+
+    setGalleryPreview(data || []);
+  }
 async function loadWebsiteContent() {
   const { data: downloadsData } = await supabase
     .from("website_downloads")

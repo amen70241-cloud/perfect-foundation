@@ -993,7 +993,7 @@ async function deleteGalleryImage(item) {
 </div>
 
 <div className="mt-10 grid gap-8 md:grid-cols-3">
-  <List title="Staff List" items={staff} editFn={editStaff} />
+  <List title="Staff List" items={staff} editFn={editStaff} deleteFn={deleteStaff} />
   <SimpleList title="Announcements" items={announcements} />
   <SimpleList title="Calendar Events" items={calendar} />
 </div>
@@ -1064,10 +1064,11 @@ function List({ title, items, editFn }) {
             >
               Edit
             </button>
+{deleteFn && (
                 <button
   type="button"
-  onClick={() => deleteStaff(item)}
-  className="mt-2 text-sm font-bold text-red-600"
+  onClick={() => deleteFn(item)}
+  className="ml-3 mt-2 text-sm font-bold text-red-600"
 >
   Delete
 </button>
@@ -1078,7 +1079,7 @@ function List({ title, items, editFn }) {
   );
 }
 
-function SimpleList({ title, items }) {
+function SimpleList({ title, items, editFN, deleteFN }) {
   return (
     <div className="bg-white rounded-[2rem] p-6 shadow border">
       <h3 className="text-xl font-black">{title}</h3>

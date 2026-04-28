@@ -599,6 +599,7 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
     </a>
   ))}
 </div>
+</div>
 </section>
 {/* EVENTS */}
 <section id="events" className="scroll-fade px-6 py-24 bg-white">

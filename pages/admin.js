@@ -345,7 +345,26 @@ async function deleteStudent(student) {
   setStaffPhone(member.phone || "");
   setStaffGender(member.gender || "");
 }
+async function deleteStaff(member) {
+  const confirmDelete = window.confirm(
+    `Delete ${member.full_name || "this staff member"}?`
+  );
 
+  if (!confirmDelete) return;
+
+  const { error } = await supabase
+    .from("staff")
+    .delete()
+    .eq("id", member.id);
+
+  if (error) {
+    setMessage(error.message);
+    return;
+  }
+
+  setMessage("Staff member deleted successfully.");
+  loadData();
+}
   async function createAnnouncement(e) {
     e.preventDefault();
 

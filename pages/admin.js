@@ -62,6 +62,8 @@ export default function Admin() {
   const [galleryTitle, setGalleryTitle] = useState("");
   const [galleryUrl, setGalleryUrl] = useState("");
   const [galleryCategory, setGalleryCategory] = useState("");
+  const [galleryFile, setGalleryFile] = useState(null);
+const [galleryUploading, setGalleryUploading] = useState(false);
   const [editingGalleryId, setEditingGalleryId] = useState(null);
 
   const [calendarTitle, setCalendarTitle] = useState("");
@@ -362,33 +364,71 @@ async function deleteStudent(student) {
     loadData();
   }
 
- async function addGalleryImage(e) {
+async function addGalleryImage(e) {
   e.preventDefault();
   setMessage("");
+
+  let imageUrl = galleryUrl;
+
+  if (!editingGalleryId && !galleryFile) {
+    return setMessage("Please select an image.");
+  }
+
+  if (galleryFile) {
+    setGalleryUploading(true);
+
+    const fileExt = galleryFile.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2)}.${fileExt}`;
+
+    const filePath = `gallery/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("gallery")
+      .upload(filePath, galleryFile);
+
+    if (uploadError) {
+      setGalleryUploading(false);
+      return setMessage(uploadError.message);
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("gallery")
+      .getPublicUrl(filePath);
+
+    imageUrl = publicUrlData.publicUrl;
+  }
 
   if (editingGalleryId) {
     const { error } = await supabase
       .from("gallery_images")
       .update({
         title: galleryTitle,
-        image_url: galleryUrl,
+        image_url: imageUrl,
         category: galleryCategory,
       })
       .eq("id", editingGalleryId);
 
-    if (error) return setMessage(error.message);
+    if (error) {
+      setGalleryUploading(false);
+      return setMessage(error.message);
+    }
 
     setMessage("Gallery photo updated.");
   } else {
     const { error } = await supabase.from("gallery_images").insert([
       {
         title: galleryTitle,
-        image_url: galleryUrl,
+        image_url: imageUrl,
         category: galleryCategory,
       },
     ]);
 
-    if (error) return setMessage(error.message);
+    if (error) {
+      setGalleryUploading(false);
+      return setMessage(error.message);
+    }
 
     setMessage("Gallery photo added.");
   }
@@ -396,7 +436,9 @@ async function deleteStudent(student) {
   setGalleryTitle("");
   setGalleryUrl("");
   setGalleryCategory("");
+  setGalleryFile(null);
   setEditingGalleryId(null);
+  setGalleryUploading(false);
   loadData();
 }
  function editGalleryImage(item) {
@@ -825,12 +867,11 @@ async function deleteGalleryImage(item) {
               />
 
               <input
-                value={galleryUrl}
-                onChange={(e) => setGalleryUrl(e.target.value)}
-                placeholder="Image URL"
-                required
-                className="input"
-              />
+  type="file"
+  accept="image/*"
+  onChange={(e) => setGalleryFile(e.target.files[0])}
+  className="input"
+/>
              <select
   value={galleryCategory}
   onChange={(e) => setGalleryCategory(e.target.value)}
@@ -852,7 +893,13 @@ async function deleteGalleryImage(item) {
   <option value="Educational Trips">Educational Trips</option>
   <option value="PTA / Parent Engagement">PTA / Parent Engagement</option>
 </select>
-              <button className="btn-dark">{editingGalleryId ? "Update Gallery Photo" : "Add Gallery Photo"}</button>
+              <button className="btn-dark">
+  {galleryUploading
+    ? "Uploading..."
+    : editingGalleryId
+    ? "Update Gallery Photo"
+    : "Add Gallery Photo"}
+</button>
             </div>
           </form>
         </div>

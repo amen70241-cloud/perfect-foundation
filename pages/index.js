@@ -538,52 +538,7 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
           </div>
         </div>
       </section>
-{/* DOWNLOADS */}
-<section id="downloads" className="scroll-fade px-6 py-24 bg-white">
-  <div className="max-w-6xl mx-auto">
-    <div className="text-center">
-      <p className="tracking-[0.4em] text-[#d9a514] font-bold">
-        DOWNLOADS
-      </p>
-      <h2 className="mt-6 text-4xl md:text-5xl font-extrabold text-[#0f172a]">
-        School documents and forms
-      </h2>
-      <p className="mt-4 text-gray-500 text-lg">
-        Access admission forms, prospectus, academic calendar and other documents.
-      </p>
-    </div>
 
-    <div className="mt-14 grid gap-6 md:grid-cols-4">
-      {websiteDownloads.length === 0 && (
-        <p className="text-gray-500">No downloads added yet.</p>
-      )}
-
-      {websiteDownloads.map((item) => (
-        <div
-          key={item.id}
-          className="bg-[#f8f6ef] rounded-3xl p-6 border border-gray-100 shadow"
-        >
-          <p className="text-[#d9a514] text-xs font-bold tracking-[0.2em] uppercase">
-            {item.category}
-          </p>
-
-          <h3 className="mt-4 text-xl font-black text-[#0f172a]">
-            {item.title}
-          </h3>
-
-          <a
-            href={item.file_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 inline-block bg-[#f4b41a] text-[#0f172a] px-5 py-3 rounded-2xl font-black"
-          >
-            Download
-          </a>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
       {/* GALLERY */}
 <section id="gallery" className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
   <div className="max-w-6xl mx-auto">
@@ -907,21 +862,21 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
 
       <div className="mt-10 grid gap-5">
         <a
-          href="#"
+          href="/downloads"
           className="bg-white/10 border border-white/10 rounded-2xl p-5 hover:bg-white/20 transition"
         >
           📄 Admission Form (PDF)
         </a>
 
         <a
-          href="#"
+          href="/downloads"
           className="bg-white/10 border border-white/10 rounded-2xl p-5 hover:bg-white/20 transition"
         >
           📘 School Prospectus
         </a>
 
         <a
-          href="#"
+          href="/downloads"
           className="bg-white/10 border border-white/10 rounded-2xl p-5 hover:bg-white/20 transition"
         >
           📅 Academic Calendar
@@ -958,7 +913,7 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
       </div>
 
       <a
-        href="#"
+        href="/downloads"
         className="mt-8 block text-center bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black shadow-lg hover:shadow-xl transition"
       >
         Download Full Calendar

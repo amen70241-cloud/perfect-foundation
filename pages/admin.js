@@ -61,6 +61,7 @@ export default function Admin() {
 
   const [galleryTitle, setGalleryTitle] = useState("");
   const [galleryUrl, setGalleryUrl] = useState("");
+  const [galleryCategory, setGalleryCategory] = useState("");
 
   const [calendarTitle, setCalendarTitle] = useState("");
   const [calendarDate, setCalendarDate] = useState("");
@@ -364,16 +365,18 @@ async function deleteStudent(student) {
     e.preventDefault();
 
     const { error } = await supabase.from("gallery_images").insert([
-      {
-        title: galleryTitle,
-        image_url: galleryUrl,
-      },
-    ]);
+  {
+    title: galleryTitle,
+    image_url: galleryUrl,
+    category: galleryCategory,
+  },
+]);
 
     if (error) return setMessage(error.message);
 
     setGalleryTitle("");
     setGalleryUrl("");
+    setGalleryCategory("");
     setMessage("Gallery image added.");
     loadData();
   }
@@ -734,7 +737,27 @@ async function deleteStudent(student) {
                 required
                 className="input"
               />
-
+             <select
+  value={galleryCategory}
+  onChange={(e) => setGalleryCategory(e.target.value)}
+  required
+  className="input"
+>
+  <option value="">Select Gallery Category</option>
+  <option value="Early Years">Early Years</option>
+  <option value="Primary Class">Primary Class</option>
+  <option value="Caring Teachers">Caring Teachers</option>
+  <option value="Morning Assembly">Morning Assembly</option>
+  <option value="Graduation Ceremony">Graduation Ceremony</option>
+  <option value="Sports Day">Sports Day</option>
+  <option value="Culture Day">Culture Day</option>
+  <option value="Speech and Prize Giving Day">Speech and Prize Giving Day</option>
+  <option value="Career Day">Career Day</option>
+  <option value="Faith Activities">Faith Activities</option>
+  <option value="Classroom Life">Classroom Life</option>
+  <option value="Educational Trips">Educational Trips</option>
+  <option value="PTA / Parent Engagement">PTA / Parent Engagement</option>
+</select>
               <button className="btn-dark">Add Gallery Photo</button>
             </div>
           </form>

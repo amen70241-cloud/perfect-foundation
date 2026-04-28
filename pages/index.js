@@ -6,6 +6,7 @@ export default function Home() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [galleryPreview, setGalleryPreview] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [websiteSettings, setWebsiteSettings] = useState(null);
   const [websiteDownloads, setWebsiteDownloads] = useState([]);
   const [websiteEvents, setWebsiteEvents] = useState([]);
@@ -25,6 +26,17 @@ export default function Home() {
     loadGalleryPreview();
     loadWebsiteContent();
   }, []);
+  useEffect(() => {
+  if (galleryPreview.length === 0) return;
+
+  const timer = setInterval(() => {
+    setCurrentSlide((prev) =>
+      prev === galleryPreview.length - 1 ? 0 : prev + 1
+    );
+  }, 4000);
+
+  return () => clearInterval(timer);
+}, [galleryPreview]);
 
   async function loadGalleryPreview() {
     const { data } = await supabase
@@ -563,7 +575,60 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
     <h2 className="mt-6 text-4xl md:text-5xl font-extrabold text-[#0f172a] leading-tight">
       A glimpse into our classrooms <br /> & community.
     </h2>
+   {galleryPreview.length > 0 && (
+  <div className="mt-14 relative rounded-[2rem] overflow-hidden shadow border h-[420px] bg-[#0f172a]">
+    <img
+      src={galleryPreview[currentSlide].image_url}
+      alt={galleryPreview[currentSlide].title || "Gallery photo"}
+      className="absolute inset-0 w-full h-full object-cover"
+    />
 
+    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+    <div className="absolute bottom-8 left-8 right-8 text-left z-10">
+      <p className="text-[#f4b41a] text-sm font-bold uppercase tracking-[0.2em]">
+        {galleryPreview[currentSlide].category || "Life at PFA"}
+      </p>
+
+      <h3 className="text-white text-3xl md:text-5xl font-black mt-2">
+        {galleryPreview[currentSlide].title || "School Life"}
+      </h3>
+
+      <a
+        href={`/gallery?category=${encodeURIComponent(
+          galleryPreview[currentSlide].category || ""
+        )}`}
+        className="inline-block mt-5 px-6 py-3 rounded-full bg-[#f4b41a] text-[#0f172a] font-bold"
+      >
+        View Gallery
+      </a>
+    </div>
+
+    <button
+      type="button"
+      onClick={() =>
+        setCurrentSlide((prev) =>
+          prev === 0 ? galleryPreview.length - 1 : prev - 1
+        )
+      }
+      className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 text-[#0f172a] w-10 h-10 rounded-full font-black"
+    >
+      ‹
+    </button>
+
+    <button
+      type="button"
+      onClick={() =>
+        setCurrentSlide((prev) =>
+          prev === galleryPreview.length - 1 ? 0 : prev + 1
+        )
+      }
+      className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 text-[#0f172a] w-10 h-10 rounded-full font-black"
+    >
+      ›
+    </button>
+  </div>
+)}
     <div className="mt-14 grid grid-cols-2 md:grid-cols-3 gap-6">
   {galleryPreview.length === 0 && (
     <p className="col-span-2 md:col-span-3 text-[#64748b]">

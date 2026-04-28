@@ -78,7 +78,7 @@ export default function Admin() {
     const { data: studentsData } = await supabase
       .from("students")
       .select("*")
-      .order("class", { ascending: true });
+      .order("class", { ascending: true })
       .order("surname", { ascending: true });
 
     const { data: staffData } = await supabase

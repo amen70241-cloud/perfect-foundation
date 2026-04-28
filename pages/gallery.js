@@ -1,8 +1,14 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
 export default function Gallery() {
+  const router = useRouter();
+  const { category } = router.query;
   const [events, setEvents] = useState([]);
+  const filteredEvents = category
+  ? events.filter((item) => item.category === category)
+  : events;
 
   useEffect(() => {
     loadEvents();
@@ -36,7 +42,7 @@ export default function Gallery() {
 
       <section className="max-w-6xl mx-auto px-6 py-10">
         <div className="grid gap-8 md:grid-cols-3">
-          {events.map((item) => (
+          {filteredEvents.map((item) => (
             <div
               key={item.id}
               className="bg-white rounded-[2rem] overflow-hidden shadow border border-gray-100"
@@ -69,7 +75,7 @@ export default function Gallery() {
             </div>
           ))}
 
-          {events.length === 0 && (
+          {filteredEvents.length === 0 && (
             <p className="text-[#64748b]">No gallery items available yet.</p>
           )}
         </div>

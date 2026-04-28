@@ -200,11 +200,15 @@ async function promoteClass(currentClass) {
   loadData();
 }
   function editStudent(student) {
-    setEditingStudentId(student.id);
-    setStudentName(student.full_name);
-    setStudentClass(student.class);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  setEditingStudentId(student.id);
+  setStudentName(student.full_name || "");
+  setStudentSurname(student.surname || "");
+  setStudentFirstName(student.first_name || "");
+  setStudentOtherNames(student.other_names || "");
+  setStudentClass(student.class || "");
+  setStudentGender(student.gender || "");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
   async function promoteStudent(student) {
   const nextClass = promotionMap[student.class];
 
@@ -214,7 +218,7 @@ async function promoteClass(currentClass) {
   }
 
   const confirmPromotion = window.confirm(
-    `Promote ${student.full_name} from ${student.class} to ${nextClass}?`
+    `Promote ${`${student.surname || ""} ${student.first_name || ""} ${student.other_names || ""}`.trim()} from ${student.class} to ${nextClass}?`
   );
 
   if (!confirmPromotion) return;
@@ -235,7 +239,7 @@ async function promoteClass(currentClass) {
 
 async function deleteStudent(student) {
   const confirmDelete = window.confirm(
-    `Delete ${student.full_name}? This may also remove linked records.`
+    `Delete ${student.surname || ""} ${student.first_name || ""} ${student.other_names || ""}? This may also remove linked records.`
   );
 
   if (!confirmDelete) return;
@@ -250,7 +254,7 @@ async function deleteStudent(student) {
     return;
   }
 
-  setMessage(`${student.full_name} deleted successfully.`);
+  setMessage(`${student.surname || ""} ${student.first_name || ""} ${student.other_names || ""} deleted successfully.`);
   loadData();
 }
   async function saveStaff(e) {
@@ -395,9 +399,11 @@ async function deleteStudent(student) {
   }
 
   const filteredStudents = students.filter((student) => {
-    const matchesSearch = student.full_name
-      ?.toLowerCase()
-      .includes(search.toLowerCase());
+  const studentDisplayName = `${student.surname || ""} ${student.first_name || ""} ${student.other_names || ""}`.trim();
+
+  const matchesSearch = studentDisplayName
+  .toLowerCase()
+  .includes(search.toLowerCase());
 
     const matchesClass =
       classFilter === "all" || student.class === classFilter;
@@ -632,7 +638,7 @@ async function deleteStudent(student) {
                       className="flex justify-between items-start border-b pb-3"
                     >
                       <div>
-  <p className="font-bold">{student.full_name}</p>
+  {`${student.surname || ""} ${student.first_name || ""} ${student.other_names || ""}`.trim() || student.full_name}
   <p className="text-xs text-gray-500">
     {student.class} • {student.gender || "Not set"}
   </p>

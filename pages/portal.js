@@ -16,11 +16,21 @@ export default function Portal() {
   async function loadPortalData() {
     setMessage("Loading portal...");
 
-    const { data: studentsData, error: studentsError } = await supabase
-      .from("students")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(1);
+    const {
+  data: { user },
+  error: userError,
+} = await supabase.auth.getUser();
+
+if (userError || !user) {
+  setMessage("Please login to view your portal.");
+  return;
+}
+
+const { data: studentsData, error: studentsError } = await supabase
+  .from("students")
+  .select("*")
+  .eq("login_email", user.email)
+  .limit(1);
 
     if (studentsError) {
       setMessage(studentsError.message);
@@ -31,7 +41,7 @@ export default function Portal() {
     setStudent(selectedStudent);
 
     if (!selectedStudent) {
-      setMessage("No student record found.");
+      setMessage("No student record found for this log in. Please contact the school administrator");
       return;
     }
 

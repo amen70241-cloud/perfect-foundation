@@ -116,15 +116,18 @@ export default function Admin() {
   async function saveStudent(e) {
   e.preventDefault();
   setMessage("");
-
+    const generatedStudentName = `${studentSurname} ${studentFirstName} ${studentOtherNames}`.trim();
   if (editingStudentId) {
     const { error } = await supabase
       .from("students")
       .update({
-        full_name: studentName,
-        class: studentClass,
-        gender: studentGender,
-      })
+  surname: studentSurname,
+  first_name: studentFirstName,
+  other_names: studentOtherNames,
+  full_name: generatedStudentName,
+  class: studentClass,
+  gender: studentGender,
+})
       .eq("id", editingStudentId);
 
     if (error) return setMessage(error.message);
@@ -137,7 +140,10 @@ export default function Admin() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        full_name: studentName,
+  surname: studentSurname,
+  first_name: studentFirstName,
+  other_names: studentOtherNames,
+  full_name: generatedStudentName,
         role: "student",
         class_name: studentClass,
         gender: studentGender,
@@ -157,7 +163,11 @@ export default function Admin() {
   }
 
   setStudentName("");
-  setStudentClass("");
+setStudentSurname("");
+setStudentFirstName("");
+setStudentOtherNames("");
+setStudentClass("");
+setStudentGender("");
   setEditingStudentId(null);
   loadData();
 }

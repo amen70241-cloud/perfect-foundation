@@ -564,7 +564,50 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
           </div>
         </div>
       </section>
+{/* ADMISSIONS CTA */}
+<section className="px-6 py-24 bg-[#0f172a] text-white">
+  <div className="max-w-6xl mx-auto text-center">
 
+    <p className="tracking-[0.4em] text-[#f4b41a] font-bold">
+      ADMISSIONS OPEN
+    </p>
+
+    <h2 className="mt-6 text-4xl md:text-5xl font-extrabold leading-tight">
+      Give your child a strong academic <br /> & moral foundation
+    </h2>
+
+    <p className="mt-6 text-white/70 max-w-2xl mx-auto">
+      Enroll your child at PFA and watch them grow in knowledge,
+      discipline, and confidence in a nurturing environment.
+    </p>
+
+    <div className="mt-10 flex flex-wrap justify-center gap-4">
+
+      <a
+        href="#admissions"
+        className="px-8 py-4 rounded-full bg-[#f4b41a] text-[#0f172a] font-bold hover:scale-105 transition"
+      >
+        Apply Now
+      </a>
+
+      <a
+        href="/downloads"
+        className="px-8 py-4 rounded-full border border-white text-white font-bold hover:bg-white hover:text-[#0f172a] transition"
+      >
+        Download Form
+      </a>
+
+      <a
+        href="https://wa.me/233244986221"
+        target="_blank"
+        className="px-8 py-4 rounded-full bg-green-600 text-white font-bold hover:scale-105 transition"
+      >
+        WhatsApp Us
+      </a>
+
+    </div>
+  </div>
+</section>
       {/* GALLERY */}
 <section id="gallery" className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
   <div className="max-w-6xl mx-auto text-center">

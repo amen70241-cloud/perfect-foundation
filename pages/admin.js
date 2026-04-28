@@ -291,13 +291,16 @@ async function deleteStudent(student) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        full_name: staffName,
-        gender: staffGender,
-        role: authRole,
-        staff_role: staffRole,
-        assigned_class: staffClass,
-        phone: staffPhone,
-      }),
+  surname: staffSurname,
+  first_name: staffFirstName,
+  other_names: staffOtherNames,
+  full_name: generatedStaffName,
+  gender: staffGender,
+  role: authRole,
+  staff_role: staffRole,
+  assigned_class: staffClass,
+  phone: staffPhone,
+}),
     });
 
     const result = await response.json();
@@ -324,12 +327,16 @@ async function deleteStudent(student) {
   loadData();
 }
   function editStaff(member) {
-    setEditingStaffId(member.id);
-    setStaffName(member.full_name);
-    setStaffRole(member.role || "");
-    setStaffClass(member.assigned_class || "");
-    setStaffPhone(member.phone || "");
-  }
+  setEditingStaffId(member.id);
+  setStaffName(member.full_name || "");
+  setStaffSurname(member.surname || "");
+  setStaffFirstName(member.first_name || "");
+  setStaffOtherNames(member.other_names || "");
+  setStaffRole(member.role || "");
+  setStaffClass(member.assigned_class || "");
+  setStaffPhone(member.phone || "");
+  setStaffGender(member.gender || "");
+}
 
   async function createAnnouncement(e) {
     e.preventDefault();

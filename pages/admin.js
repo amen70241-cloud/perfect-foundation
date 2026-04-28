@@ -29,6 +29,20 @@ const promotionMap = {
   "JHS 2": "JHS 3",
   "JHS 3": "Completed",
 };
+const promotionMap = {
+  Creche: "Nursery",
+  Nursery: "Kindergarten",
+  Kindergarten: "Primary 1",
+  "Primary 1": "Primary 2",
+  "Primary 2": "Primary 3",
+  "Primary 3": "Primary 4",
+  "Primary 4": "Primary 5",
+  "Primary 5": "Primary 6",
+  "Primary 6": "JHS 1",
+  "JHS 1": "JHS 2",
+  "JHS 2": "JHS 3",
+  "JHS 3": "Graduated",
+};
 export default function Admin() {
   const [students, setStudents] = useState([]);
   const [staff, setStaff] = useState([]);
@@ -187,7 +201,54 @@ async function promoteClass(currentClass) {
     setStudentClass(student.class);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+  async function promoteStudent(student) {
+  const nextClass = promotionMap[student.class];
 
+  if (!nextClass) {
+    setMessage("No next class found for this student.");
+    return;
+  }
+
+  const confirmPromotion = window.confirm(
+    `Promote ${student.full_name} from ${student.class} to ${nextClass}?`
+  );
+
+  if (!confirmPromotion) return;
+
+  const { error } = await supabase
+    .from("students")
+    .update({ class: nextClass })
+    .eq("id", student.id);
+
+  if (error) {
+    setMessage(error.message);
+    return;
+  }
+
+  setMessage(`${student.full_name} promoted to ${nextClass}.`);
+  loadData();
+}
+
+async function deleteStudent(student) {
+  const confirmDelete = window.confirm(
+    `Delete ${student.full_name}? This may also remove linked records.`
+  );
+
+  if (!confirmDelete) return;
+
+  const { error } = await supabase
+    .from("students")
+    .delete()
+    .eq("id", student.id);
+
+  if (error) {
+    setMessage(error.message);
+    return;
+  }
+
+  setMessage(`${student.full_name} deleted successfully.`);
+  loadData();
+}
   async function saveStaff(e) {
   e.preventDefault();
   setMessage("");
@@ -529,12 +590,31 @@ async function promoteClass(currentClass) {
     {student.class} • {student.gender || "Not set"}
   </p>
 </div>
-                      <button
-                        onClick={() => editStudent(student)}
-                        className="text-sm font-bold text-[#0f172a]"
-                      >
-                        Edit
-                      </button>
+                      <div className="flex gap-3">
+  <button
+    type="button"
+    onClick={() => editStudent(student)}
+    className="text-sm font-bold text-[#0f172a]"
+  >
+    Edit
+  </button>
+
+  <button
+    type="button"
+    onClick={() => promoteStudent(student)}
+    className="text-sm font-bold text-green-600"
+  >
+    Promote
+  </button>
+
+  <button
+    type="button"
+    onClick={() => deleteStudent(student)}
+    className="text-sm font-bold text-red-600"
+  >
+    Delete
+  </button>
+</div>
                     </div>
                   ))}
                 </div>

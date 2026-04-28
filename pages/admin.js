@@ -1080,7 +1080,7 @@ function List({ title, items, editFn }) {
   );
 }
 
-function SimpleList({ title, items, editFN, deleteFN }) {
+function SimpleList({ title, items = [], editFN, deleteFN }) {
   return (
     <div className="bg-white rounded-[2rem] p-6 shadow border">
       <h3 className="text-xl font-black">{title}</h3>

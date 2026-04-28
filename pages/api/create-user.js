@@ -45,15 +45,17 @@ export default async function handler(req, res) {
 
   try {
     const {
-      full_name,
-      role,
-      class_name,
-      phone,
-      gender,
-      assigned_class,
-      staff_role,
-    } = req.body;
-
+  surname,
+  first_name,
+  other_names,
+  full_name,
+  role,
+  class_name,
+  phone,
+  assigned_class,
+  staff_role,
+  gender,
+} = req.body;
     if (!full_name || !role) {
       return res.status(400).json({ error: "Full name and role are required." });
     }
@@ -113,6 +115,9 @@ export default async function handler(req, res) {
         .insert([
           {
             full_name,
+            surname,
+            first_name,
+            other_names,
             class: class_name,
             gender,
             login_email: email,

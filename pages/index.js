@@ -5,10 +5,23 @@ import { supabase } from "../lib/supabase";
 export default function Home() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [galleryPreview, setGalleryPreview] = useState([]);
   const [websiteSettings, setWebsiteSettings] = useState(null);
 const [websiteDownloads, setWebsiteDownloads] = useState([]);
 const [websiteEvents, setWebsiteEvents] = useState([]);
 const [admissionForm, setAdmissionForm] = useState({
+ useEffect(() => {
+  loadGalleryPreview();
+}, []);
+
+async function loadGalleryPreview() {
+  const { data } = await supabase
+    .from("gallery_images")
+    .select("*")
+    .limit(6);
+
+  setGalleryPreview(data || []);
+}
   child_name: "",
   child_class: "",
   parent_name: "",
@@ -552,43 +565,41 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
       A glimpse into our classrooms <br /> & community.
     </h2>
 
-    <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6">
-      {[
-        "Early Years",
-        "Primary Class",
-        "Caring Teachers",
-        "Morning Assembly",
-        "Graduation Ceremony",
-        "Sports Day",
-        "Culture Day",
-        "Speech and Prize Giving Day",
-        "Career Day",
-        "Faith Activities",
-        "Classroom Life",
-        "Educational Trips",
-      ].map((category) => (
-        <a
-          key={category}
-          href={`/gallery?category=${encodeURIComponent(category)}`}
-          className="group relative h-56 rounded-[2rem] overflow-hidden shadow border bg-[#0f172a]"
-        >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10" />
+    <div className="mt-14 grid grid-cols-2 md:grid-cols-3 gap-6">
+  {galleryPreview.length === 0 && (
+    <p className="col-span-2 md:col-span-3 text-[#64748b]">
+      No gallery photos added yet.
+    </p>
+  )}
 
-          <div className="absolute inset-0 bg-[#0f172a] group-hover:scale-105 transition duration-500" />
+  {galleryPreview.map((item) => (
+    <a
+      key={item.id}
+      href={`/gallery?category=${encodeURIComponent(item.category || "Gallery")}`}
+      className="group relative h-56 md:h-72 rounded-[2rem] overflow-hidden shadow border bg-[#0f172a]"
+    >
+      <img
+        src={item.image_url}
+        alt={item.title || item.category || "Gallery image"}
+        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-500"
+      />
 
-          <div className="absolute bottom-6 left-6 right-6 z-20 text-left">
-            <div className="w-12 h-1 bg-[#f4b41a] mb-4" />
-            <h3 className="text-white text-2xl font-black">
-              {category}
-            </h3>
-            <p className="text-white/70 text-sm mt-2">
-              View gallery
-            </p>
-          </div>
-        </a>
-      ))}
-    </div>
-  </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+      <div className="absolute bottom-6 left-6 right-6 z-10 text-left">
+        <div className="w-12 h-1 bg-[#f4b41a] mb-4" />
+
+        <p className="text-[#f4b41a] text-xs font-bold uppercase tracking-[0.2em]">
+          {item.category || "Gallery"}
+        </p>
+
+        <h3 className="text-white text-xl md:text-2xl font-black mt-1">
+          {item.title || "School Life"}
+        </h3>
+      </div>
+    </a>
+  ))}
+</div>
 </section>
 {/* EVENTS */}
 <section id="events" className="scroll-fade px-6 py-24 bg-white">

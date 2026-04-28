@@ -1,7 +1,9 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 
 export default function Home() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [websiteSettings, setWebsiteSettings] = useState(null);
 const [websiteDownloads, setWebsiteDownloads] = useState([]);
@@ -541,52 +543,49 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
 
       {/* GALLERY */}
 <section id="gallery" className="scroll-fade px-6 py-24 bg-[#f8f6ef]">
-  <div className="max-w-6xl mx-auto">
-    <div className="text-center">
-      <p className="tracking-[0.4em] text-[#d9a514] font-bold">
-        LIFE AT PFA
-      </p>
-      <h2 className="mt-6 text-4xl md:text-5xl font-extrabold text-[#0f172a]">
-        A glimpse into our school community
-      </h2>
-    </div>
+  <div className="max-w-6xl mx-auto text-center">
+    <p className="tracking-[0.4em] text-[#d9a514] font-bold">
+      LIFE AT PFA
+    </p>
 
-    <div className="mt-14 grid gap-6 md:grid-cols-3">
-      {websiteEvents.length === 0 && (
-        <p className="text-gray-500">No gallery items added yet.</p>
-      )}
+    <h2 className="mt-6 text-4xl md:text-5xl font-extrabold text-[#0f172a] leading-tight">
+      A glimpse into our classrooms <br /> & community.
+    </h2>
 
-      {websiteEvents.map((item) => (
-        <div
-          key={item.id}
-          className="bg-white rounded-[2rem] overflow-hidden shadow border border-gray-100"
+    <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6">
+      {[
+        "Early Years",
+        "Primary Class",
+        "Caring Teachers",
+        "Morning Assembly",
+        "Graduation Ceremony",
+        "Sports Day",
+        "Culture Day",
+        "Speech and Prize Giving Day",
+        "Career Day",
+        "Faith Activities",
+        "Classroom Life",
+        "Educational Trips",
+      ].map((category) => (
+        <a
+          key={category}
+          href={`/gallery?category=${encodeURIComponent(category)}`}
+          className="group relative h-56 rounded-[2rem] overflow-hidden shadow border bg-[#0f172a]"
         >
-          {item.image_url ? (
-            <img
-              src={item.image_url}
-              alt={item.title}
-              className="w-full h-64 object-cover"
-            />
-          ) : (
-            <div className="w-full h-64 bg-[#0f172a] flex items-center justify-center text-[#f4b41a] text-5xl">
-              🎓
-            </div>
-          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10" />
 
-          <div className="p-6">
-            <p className="text-[#d9a514] text-xs font-bold tracking-[0.2em] uppercase">
-              {item.category}
-            </p>
+          <div className="absolute inset-0 bg-[#0f172a] group-hover:scale-105 transition duration-500" />
 
-            <h3 className="mt-3 text-2xl font-black text-[#0f172a]">
-              {item.title}
+          <div className="absolute bottom-6 left-6 right-6 z-20 text-left">
+            <div className="w-12 h-1 bg-[#f4b41a] mb-4" />
+            <h3 className="text-white text-2xl font-black">
+              {category}
             </h3>
-
-            <p className="mt-3 text-gray-500">
-              {item.description}
+            <p className="text-white/70 text-sm mt-2">
+              View gallery
             </p>
           </div>
-        </div>
+        </a>
       ))}
     </div>
   </div>

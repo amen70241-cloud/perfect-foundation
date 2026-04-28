@@ -79,11 +79,12 @@ export default function Admin() {
       .from("students")
       .select("*")
       .order("class", { ascending: true });
+      .order("surname", { ascending: true });
 
     const { data: staffData } = await supabase
       .from("staff")
       .select("*")
-      .order("created_at", { ascending: false });
+      .order("surname", { ascending: false });
 
     const { data: announcementsData } = await supabase
       .from("announcements")
@@ -255,7 +256,7 @@ async function deleteStudent(student) {
   async function saveStaff(e) {
   e.preventDefault();
   setMessage("");
-
+  const generatedStaffName = `${staffSurname} ${staffFirstName} ${staffOtherNames}`.trim();
   const roleMap = {
     Admin: "admin",
     Teacher: "teacher",
@@ -269,12 +270,15 @@ async function deleteStudent(student) {
     const { error } = await supabase
       .from("staff")
       .update({
-        full_name: staffName,
-        gender: staffGender,
-        role: staffRole,
-        assigned_class: staffClass,
-        phone: staffPhone,
-      })
+  surname: staffSurname,
+  first_name: staffFirstName,
+  other_names: staffOtherNames,
+  full_name: generatedStaffName,
+  role: staffRole,
+  assigned_class: staffClass,
+  phone: staffPhone,
+  gender: staffGender,
+})
       .eq("id", editingStaffId);
 
     if (error) return setMessage(error.message);
@@ -309,6 +313,9 @@ async function deleteStudent(student) {
   }
 
   setStaffName("");
+  setStaffSurname("");
+  setStaffFirstName("");
+  setStaffOtherNames("");
   setStaffRole("");
   setStaffClass("");
   setStaffPhone("");
@@ -501,13 +508,28 @@ async function deleteStudent(student) {
             </h2>
 
             <div className="mt-6 grid gap-4">
-              <input
-                value={staffName}
-                onChange={(e) => setStaffName(e.target.value)}
-                placeholder="Staff full name"
-                required
-                className="input"
-              />
+             <input
+  value={staffSurname}
+  onChange={(e) => setStaffSurname(e.target.value)}
+  placeholder="Surname"
+  required
+  className="input"
+/>
+
+<input
+  value={staffFirstName}
+  onChange={(e) => setStaffFirstName(e.target.value)}
+  placeholder="First name"
+  required
+  className="input"
+/>
+
+<input
+  value={staffOtherNames}
+  onChange={(e) => setStaffOtherNames(e.target.value)}
+  placeholder="Other names optional"
+  className="input"
+/>
 
               <select
                 value={staffRole}

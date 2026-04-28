@@ -1044,7 +1044,7 @@ function Stat({ title, value }) {
   );
 }
 
-function List({ title, items, editFn }) {
+function List({ title, items = [], editFn, deleteFn }) {
   return (
     <div className="bg-white rounded-[2rem] p-6 shadow border">
       <h3 className="text-xl font-black">{title}</h3>

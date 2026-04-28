@@ -1064,6 +1064,13 @@ function List({ title, items, editFn }) {
             >
               Edit
             </button>
+                <button
+  type="button"
+  onClick={() => deleteStaff(item)}
+  className="mt-2 text-sm font-bold text-red-600"
+>
+  Delete
+</button>
           </div>
         ))}
       </div>

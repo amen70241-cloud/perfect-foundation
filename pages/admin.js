@@ -39,11 +39,17 @@ export default function Admin() {
   const [calendar, setCalendar] = useState([]);
 
   const [studentName, setStudentName] = useState("");
+  const [studentSurname, setStudentSurname] = useState("");
+  const [studentFirstName, setStudentFirstName] = useState("");
+  const [studentOtherNames, setStudentOtherNames] = useState("");
   const [studentGender, setStudentGender] = useState("");
   const [studentClass, setStudentClass] = useState("");
   const [editingStudentId, setEditingStudentId] = useState(null);
 
   const [staffName, setStaffName] = useState("");
+  const [staffSurname, setStaffSurname] = useState("");
+  const [staffFirstName, setStaffFirstName] = useState("");
+  const [staffOtherNames, setStaffOtherNames] = useState("");
   const [staffGender, setStaffGender] = useState("");
   const [staffRole, setStaffRole] = useState("");
   const [staffClass, setStaffClass] = useState("");
@@ -428,12 +434,27 @@ async function deleteStudent(student) {
 
             <div className="mt-6 grid gap-4">
               <input
-                value={studentName}
-                onChange={(e) => setStudentName(e.target.value)}
-                placeholder="Student full name"
-                required
-                className="input"
-              />
+  value={studentSurname}
+  onChange={(e) => setStudentSurname(e.target.value)}
+  placeholder="Surname"
+  required
+  className="input"
+/>
+
+<input
+  value={studentFirstName}
+  onChange={(e) => setStudentFirstName(e.target.value)}
+  placeholder="First name"
+  required
+  className="input"
+/>
+
+<input
+  value={studentOtherNames}
+  onChange={(e) => setStudentOtherNames(e.target.value)}
+  placeholder="Other names optional"
+  className="input"
+/>
               <select
   value={studentGender}
   onChange={(e) => setStudentGender(e.target.value)}

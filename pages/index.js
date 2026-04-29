@@ -122,7 +122,7 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
     <meta name="google-site-verification" content="OGzrHWgwdW2jsvAOLFG1yelh7JSREpYtk1FAl8kk05Q" />
       <meta
         name="description"
-        content="PFA School is a trusted primary school in Kasoa, Ghana. Admissions open for new students."
+        content="PFA School is a trusted primary school in Oshuman, Ghana. Admissions open for new students."
       />
 
       <meta
@@ -139,10 +139,10 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
       alternateName: "PFA School",
       url: "https://perfect-foundation.vercel.app/",
       description:
-        "Perfect Foundation Academy is a trusted primary school in Kasoa, Ghana. We provide quality education, discipline, and a supportive learning environment.",
+        "Perfect Foundation Academy is a trusted primary school in Oshuman, Ghana. We provide quality education, discipline, and a supportive learning environment.",
       address: {
         "@type": "PostalAddress",
-        addressLocality: "Kasoa",
+        addressLocality: "Oshuman",
         addressCountry: "Ghana",
       },
       sameAs: [

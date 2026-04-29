@@ -129,6 +129,28 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
         name="keywords"
         content="PFA School, primary school, basic school, admissions, Ghana school"
       />
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "School",
+      name: "Perfect Foundation Academy",
+      alternateName: "PFA School",
+      url: "https://perfect-foundation.vercel.app/",
+      description:
+        "Perfect Foundation Academy is a trusted primary school in Kasoa, Ghana. We provide quality education, discipline, and a supportive learning environment.",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Kasoa",
+        addressCountry: "Ghana",
+      },
+      sameAs: [
+        "https://maps.app.goo.gl/3LzXCj4PdbBYprzF8"
+      ],
+    }),
+  }}
+/>
     </Head>
 
     <main className="bg-[#f8f6ef] text-[#1e293b]">

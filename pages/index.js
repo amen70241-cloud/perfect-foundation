@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
@@ -115,6 +116,21 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
   });
 }
   return (
+  <>
+    <Head>  
+    <title>PFA School – Primary School in Oshuman, Ghana</title>
+    <meta name="google-site-verification" content="OGzrHWgwdW2jsvAOLFG1yelh7JSREpYtk1FAl8kk05Q" />
+      <meta
+        name="description"
+        content="PFA School is a trusted primary school in Kasoa, Ghana. Admissions open for new students."
+      />
+
+      <meta
+        name="keywords"
+        content="PFA School, primary school, basic school, admissions, Ghana school"
+      />
+    </Head>
+
     <main className="bg-[#f8f6ef] text-[#1e293b]">
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-[#f8f6ef]/95 backdrop-blur border-b border-gray-200 nav-shadow transition-all duration-300">
@@ -1165,5 +1181,6 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
   <span className="relative z-10">💬</span>
 </a>
 </main>
+</>
 );
 }

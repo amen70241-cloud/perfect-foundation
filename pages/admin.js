@@ -366,22 +366,32 @@ async function deleteStaff(member) {
   loadData();
 }
   async function createAnnouncement(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    const { error } = await supabase.from("announcements").insert([
+  if (!announcementTitle || !announcementMessage) {
+    setMessage("Please enter announcement title and message.");
+    return;
+  }
+
+  const { error } = await supabase
+    .from("announcements")
+    .insert([
       {
         title: announcementTitle,
         message: announcementMessage,
       },
     ]);
 
-    if (error) return setMessage(error.message);
-
-    setAnnouncementTitle("");
-    setAnnouncementMessage("");
-    setMessage("Announcement created.");
-    loadData();
+  if (error) {
+    setMessage(error.message);
+    return;
   }
+
+  setAnnouncementTitle("");
+  setAnnouncementMessage("");
+  setMessage("Announcement created successfully.");
+  loadData();
+}
 
 async function addGalleryImage(e) {
   e.preventDefault();
@@ -788,33 +798,37 @@ async function deleteGalleryImage(item) {
         </div>
 
         <div className="mt-10 grid gap-8 md:grid-cols-2">
-          <form
-            onSubmit={createAnnouncement}
-            className="bg-white rounded-[2rem] p-8 shadow border"
-          >
-            <h2 className="text-2xl font-black">Create Announcement</h2>
+ <form
+  onSubmit={createAnnouncement}
+  className="bg-white rounded-[2rem] p-8 shadow border"
+>
+  <h2 className="text-2xl font-black text-[#0f172a]">
+    Create Announcement
+  </h2>
 
-            <div className="mt-6 grid gap-4">
-              <input
-                value={announcementTitle}
-                onChange={(e) => setAnnouncementTitle(e.target.value)}
-                placeholder="Announcement title"
-                required
-                className="input"
-              />
+  <input
+    type="text"
+    value={announcementTitle}
+    onChange={(e) => setAnnouncementTitle(e.target.value)}
+    placeholder="Announcement title"
+    className="mt-6 w-full rounded-2xl border border-gray-200 px-5 py-4 text-[#0f172a] outline-none"
+  />
 
-              <textarea
-                value={announcementMessage}
-                onChange={(e) => setAnnouncementMessage(e.target.value)}
-                placeholder="Announcement message"
-                required
-                rows="4"
-                className="input"
-              />
+  <textarea
+    value={announcementMessage}
+    onChange={(e) => setAnnouncementMessage(e.target.value)}
+    placeholder="Announcement message"
+    rows="5"
+    className="mt-4 w-full rounded-2xl border border-gray-200 px-5 py-4 text-[#0f172a] outline-none"
+  />
 
-              <button className="btn-dark">Create Announcement</button>
-            </div>
-          </form>
+  <button
+    type="submit"
+    className="mt-6 w-full rounded-2xl bg-[#0f172a] px-6 py-4 font-bold text-white"
+  >
+    Create Announcement
+  </button>
+</form>
          <div className="mt-8">
   <h3 className="text-lg font-black text-[#0f172a] mb-4">
     Gallery Photos

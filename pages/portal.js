@@ -5,6 +5,7 @@ export default function Portal() {
   const [student, setStudent] = useState(null);
   const [fees, setFees] = useState([]);
   const [results, setResults] = useState([]);
+const [announcements, setAnnouncements] = useState([]);
   const [attendance, setAttendance] = useState([]);
   const [selectedTerm, setSelectedTerm] = useState("Term 1");
   const [message, setMessage] = useState("Loading portal...");
@@ -25,7 +26,12 @@ if (userError || !user) {
   setMessage("Please login to view your portal.");
   return;
 }
+const { data: announcementData } = await supabase
+  .from("announcements")
+  .select("*")
+  .order("created_at", { ascending: false });
 
+setAnnouncements(announcementData || []);
 const { data: studentsData, error: studentsError } = await supabase
   .from("students")
   .select("*")
@@ -363,10 +369,28 @@ const { data: studentsData, error: studentsError } = await supabase
             </div>
 
             <div className="mt-8 grid gap-6 md:grid-cols-3">
-              <InfoCard
-                title="Announcements"
-                text="School announcements will appear here."
-              />
+              <div className="bg-white rounded-[2rem] p-6 shadow border">
+  <h3 className="text-xl font-black text-[#0f172a]">
+    Announcements
+  </h3>
+
+  {announcements.length === 0 ? (
+    <p className="mt-4 text-[#64748b]">
+      School announcements will appear here.
+    </p>
+  ) : (
+    <div className="mt-4 space-y-4">
+      {announcements.map((item) => (
+        <div key={item.id} className="border-b pb-3">
+          <p className="font-bold">{item.title}</p>
+          <p className="text-sm text-[#64748b]">
+            {item.message}
+          </p>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
               <InfoCard
                 title="Academic Calendar"
                 text="Term dates and school events will appear here."

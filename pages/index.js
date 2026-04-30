@@ -1053,28 +1053,27 @@ const whatsappLink = `https://wa.me/${cleanWhatsApp}?text=Hello%20Perfect%20Foun
         Academic Calendar Preview
       </h3>
 
-      <div className="mt-8 grid gap-4">
-        <div className="flex justify-between border-b pb-3">
-          <span>Term Begins</span>
-          <span className="font-bold">September 2026</span>
-        </div>
-
-        <div className="flex justify-between border-b pb-3">
-          <span>Mid-Term Break</span>
-          <span className="font-bold">October</span>
-        </div>
-
-        <div className="flex justify-between border-b pb-3">
-          <span>Examinations</span>
-          <span className="font-bold">December</span>
-        </div>
-
-        <div className="flex justify-between">
-          <span>Vacation</span>
-          <span className="font-bold">December</span>
-        </div>
+     <div className="mt-8 grid gap-4">
+  {calendarEvents.length === 0 ? (
+    <p className="text-gray-500">
+      No calendar events added yet.
+    </p>
+  ) : (
+    calendarEvents.slice(0, 4).map((item) => (
+      <div
+        key={item.id}
+        className="flex justify-between border-b pb-3"
+      >
+        <span>{item.title}</span>
+        <span className="font-bold">
+          {item.event_date
+            ? new Date(item.event_date).toLocaleDateString()
+            : ""}
+        </span>
       </div>
-
+    ))
+  )}
+</div>
       <a
         href="/downloads"
         className="mt-8 block text-center bg-[#f4b41a] text-[#0f172a] py-4 rounded-2xl font-black shadow-lg hover:shadow-xl transition"

@@ -96,7 +96,7 @@ const [galleryUploading, setGalleryUploading] = useState(false);
       .order("created_at", { ascending: false });
 
     const { data: enquiriesData } = await supabase
-      .from("admission_enquiries")
+      .from("admissions")
       .select("*")
       .order("created_at", { ascending: false });
 
@@ -516,7 +516,7 @@ async function deleteGalleryImage(item) {
   }
   const deleteEnquiry = async (item) => {
   const { error } = await supabase
-    .from("admission_enquiries")
+    .from("admissions")
     .delete()
     .eq("id", item.id);
 

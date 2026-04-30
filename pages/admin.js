@@ -1172,38 +1172,43 @@ function SimpleList({ title, items = [], editFn, deleteFn }) {
       <h3 className="text-xl font-black">{title}</h3>
 
       <div className="mt-5 space-y-3">
-        {items.length === 0 && <p className="text-[#64748b]">No records yet.</p>}
+        {items.length === 0 && (
+          <p className="text-[#64748b]">No records yet.</p>
+        )}
 
         {items.map((item) => (
-  <div key={item.id} className="border-b pb-3">
-    <p className="font-bold">{item.title}</p>
+          <div key={item.id} className="border-b pb-3">
+            <p className="font-bold">
+              {item.title || item.full_name}
+            </p>
 
-    <p className="text-sm text-[#64748b]">
-      {item.message || item.description || item.event_date}
-    </p>
+            <p className="text-sm text-[#64748b]">
+              {item.message ||
+                item.description ||
+                item.event_date ||
+                item.role ||
+                ""}
+            </p>
 
-    {/* ACTION BUTTONS */}
-    {editFn && (
-      <button
-        type="button"
-        onClick={() => editFn(item)}
-        className="mt-2 text-sm font-bold text-[#d9a514]"
-      >
-        Edit
-      </button>
-    )}
+            {editFn && (
+              <button
+                type="button"
+                onClick={() => editFn(item)}
+                className="mt-2 text-sm font-bold text-[#d9a514]"
+              >
+                Edit
+              </button>
+            )}
 
-    {deleteFn && (
-      <button
-        type="button"
-        onClick={() => deleteFn(item)}
-        className="ml-3 mt-2 text-sm font-bold text-red-600"
-      >
-        Delete
-      </button>
-    )}
-  </div>
-))}
+            {deleteFn && (
+              <button
+                type="button"
+                onClick={() => deleteFn(item)}
+                className="ml-3 mt-2 text-sm font-bold text-red-600"
+              >
+                Delete
+              </button>
+            )}
           </div>
         ))}
       </div>

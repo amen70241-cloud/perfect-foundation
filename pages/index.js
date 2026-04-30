@@ -69,7 +69,7 @@ setWebsiteSettings(settingsData || null);
   setWebsiteDownloads(downloadsData || []);
   setWebsiteEvents(eventsData || []);
   const { data: calendarData } = await supabase
-  .from("calendar_events")
+  .from("academic_calendar")
   .select("*")
   .order("event_date", { ascending: true });
 

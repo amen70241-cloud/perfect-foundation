@@ -514,7 +514,59 @@ async function deleteGalleryImage(item) {
     setMessage("Calendar event added.");
     loadData();
   }
+async function deleteAnnouncement(item) {
+  const confirmDelete = window.confirm(`Delete announcement: ${item.title}?`);
+  if (!confirmDelete) return;
 
+  const { error } = await supabase
+    .from("announcements")
+    .delete()
+    .eq("id", item.id);
+
+  if (error) {
+    setMessage(error.message);
+    return;
+  }
+
+  setMessage("Announcement deleted.");
+  loadData();
+}
+
+async function deleteCalendarEvent(item) {
+  const confirmDelete = window.confirm(`Delete calendar event: ${item.title}?`);
+  if (!confirmDelete) return;
+
+  const { error } = await supabase
+    .from("academic_calendar")
+    .delete()
+    .eq("id", item.id);
+
+  if (error) {
+    setMessage(error.message);
+    return;
+  }
+
+  setMessage("Calendar event deleted.");
+  loadData();
+}
+
+async function deleteEnquiry(item) {
+  const confirmDelete = window.confirm(`Delete enquiry from ${item.parent_name || item.child_name}?`);
+  if (!confirmDelete) return;
+
+  const { error } = await supabase
+    .from("admission_enquiries")
+    .delete()
+    .eq("id", item.id);
+
+  if (error) {
+    setMessage(error.message);
+    return;
+  }
+
+  setMessage("Admission enquiry deleted.");
+  loadData();
+}
   const filteredStudents = students.filter((student) => {
   const studentDisplayName = `${student.surname || ""} ${student.first_name || ""} ${student.other_names || ""}`.trim();
 
@@ -1094,7 +1146,7 @@ function List({ title, items = [], editFn, deleteFn }) {
   );
 }
 
-function SimpleList({ title, items = [], editFN, deleteFN }) {
+function SimpleList({ title, items = [], editFn, deleteFn }) {
   return (
     <div className="bg-white rounded-[2rem] p-6 shadow border">
       <h3 className="text-xl font-black">{title}</h3>

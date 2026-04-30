@@ -20,6 +20,8 @@ export default function Teacher() {
   const [students, setStudents] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [selectedClass, setSelectedClass] = useState("Primary 1");
+  const [teacherName, setTeacherName] = useState("");
+
   const [selectedStudent, setSelectedStudent] = useState("");
   const [attendanceStatus, setAttendanceStatus] = useState("present");
 
@@ -35,7 +37,7 @@ export default function Teacher() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [selectedClass]);
 
   useEffect(() => {
     loadSubjects();
@@ -49,6 +51,13 @@ export default function Teacher() {
       .select("*")
       .order("full_name", { ascending: true });
 
+    const { data: staffData } = await supabase
+      .from("staff")
+      .select("*")
+      .eq("role", "Teacher")
+      .eq("assigned_class", selectedClass)
+      .limit(1);
+
     const { data: attendanceData } = await supabase
       .from("attendance")
       .select("*, students(full_name)")
@@ -60,6 +69,7 @@ export default function Teacher() {
       .order("created_at", { ascending: false });
 
     setStudents(studentsData || []);
+    setTeacherName(staffData?.[0]?.full_name || "");
     setAttendance(attendanceData || []);
     setResults(resultsData || []);
   }
@@ -175,6 +185,12 @@ export default function Teacher() {
           <div>
             <h1 className="text-3xl font-black">Teacher Portal</h1>
             <p className="text-gray-300">Perfect Foundation Academy</p>
+
+            {teacherName && (
+              <p className="mt-2 text-[#f4b41a] font-bold">
+                {teacherName}
+              </p>
+            )}
           </div>
 
           <a href="/" className="text-[#f4b41a] font-bold">
@@ -192,8 +208,8 @@ export default function Teacher() {
 
         <div className="grid gap-6 md:grid-cols-4">
           <Stat title="Selected Class" value={selectedClass} />
+          <Stat title="Teacher" value={teacherName || "Not assigned"} />
           <Stat title="Students" value={classStudents.length} />
-          <Stat title="Attendance Records" value={attendance.length} />
           <Stat title="Results Drafts" value={classResults.length} />
         </div>
 
@@ -235,21 +251,15 @@ export default function Teacher() {
         </div>
 
         <div className="mt-8 grid gap-8 md:grid-cols-2">
-          <form
-            onSubmit={saveAttendance}
-            className="bg-white rounded-[2rem] p-8 shadow border"
-          >
+          <form onSubmit={saveAttendance} className="bg-white rounded-[2rem] p-8 shadow border">
             <h2 className="text-2xl font-black">Mark Attendance</h2>
-            <p className="mt-2 text-[#64748b]">
-              Mark students as present, absent, or late.
-            </p>
 
             <div className="mt-6 grid gap-4">
               <select
                 value={selectedStudent}
                 onChange={(e) => setSelectedStudent(e.target.value)}
                 required
-                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+                className="w-full border border-gray-200 rounded-2xl p-4"
               >
                 <option value="">Select student</option>
                 {classStudents.map((student) => (
@@ -262,7 +272,7 @@ export default function Teacher() {
               <select
                 value={attendanceStatus}
                 onChange={(e) => setAttendanceStatus(e.target.value)}
-                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+                className="w-full border border-gray-200 rounded-2xl p-4"
               >
                 <option value="present">Present</option>
                 <option value="absent">Absent</option>
@@ -275,21 +285,15 @@ export default function Teacher() {
             </div>
           </form>
 
-          <form
-            onSubmit={saveResult}
-            className="bg-white rounded-[2rem] p-8 shadow border"
-          >
+          <form onSubmit={saveResult} className="bg-white rounded-[2rem] p-8 shadow border">
             <h2 className="text-2xl font-black">Enter Results</h2>
-            <p className="mt-2 text-[#64748b]">
-              Add scores as drafts. Publish when ready.
-            </p>
 
             <div className="mt-6 grid gap-4">
               <select
                 value={selectedStudent}
                 onChange={(e) => setSelectedStudent(e.target.value)}
                 required
-                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+                className="w-full border border-gray-200 rounded-2xl p-4"
               >
                 <option value="">Select student</option>
                 {classStudents.map((student) => (
@@ -303,7 +307,7 @@ export default function Teacher() {
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 required
-                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+                className="w-full border border-gray-200 rounded-2xl p-4"
               >
                 <option value="">Select subject</option>
                 {subjects.map((item) => (
@@ -319,7 +323,7 @@ export default function Teacher() {
                 onChange={(e) => setScore(e.target.value)}
                 placeholder="Score e.g. 85"
                 required
-                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+                className="w-full border border-gray-200 rounded-2xl p-4"
               />
 
               <textarea
@@ -327,7 +331,7 @@ export default function Teacher() {
                 onChange={(e) => setRemarks(e.target.value)}
                 placeholder="Teacher remarks"
                 rows="3"
-                className="w-full border border-gray-200 rounded-2xl p-4 outline-none focus:border-[#f4b41a]"
+                className="w-full border border-gray-200 rounded-2xl p-4"
               />
 
               <button className="bg-[#0f172a] text-white py-4 rounded-2xl font-black">
@@ -347,9 +351,6 @@ export default function Teacher() {
 
         <div className="mt-8 bg-white rounded-[2rem] p-8 shadow border">
           <h2 className="text-2xl font-black">Results for {selectedClass}</h2>
-          <p className="mt-2 text-[#64748b]">
-            Published results will appear on the student portal.
-          </p>
 
           <div className="mt-6 overflow-x-auto">
             <table className="w-full text-left">
@@ -375,13 +376,7 @@ export default function Teacher() {
                     <td className="py-4 pr-4">{item.grade}</td>
                     <td className="py-4 pr-4">{item.result_type}</td>
                     <td className="py-4 pr-4">
-                      {item.published ? (
-                        <span className="text-green-600 font-bold">
-                          Published
-                        </span>
-                      ) : (
-                        <span className="text-[#d9a514] font-bold">Draft</span>
-                      )}
+                      {item.published ? "Published" : "Draft"}
                     </td>
                   </tr>
                 ))}
@@ -398,66 +393,22 @@ export default function Teacher() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-8 md:grid-cols-2">
-          <div className="bg-white rounded-[2rem] p-8 shadow border">
-            <h2 className="text-2xl font-black">Recent Attendance</h2>
+        <div className="mt-10 bg-white p-6 rounded-2xl shadow">
+          <h2 className="text-xl font-bold mb-4">Class Students</h2>
 
-            <div className="mt-6 space-y-3">
-              {attendance.slice(0, 8).map((item) => (
-                <div key={item.id} className="border-b pb-3">
-                  <p className="font-bold">
-                    {item.students?.full_name || "Student"}
-                  </p>
-                  <p className="text-sm text-[#64748b]">
-                    {item.class} • {item.status} • {item.attendance_date}
-                  </p>
-                </div>
-              ))}
-
-              {attendance.length === 0 && (
-                <p className="text-[#64748b]">No attendance records yet.</p>
-              )}
-            </div>
-          </div>
-
-          <div className="bg-white rounded-[2rem] p-8 shadow border">
-            <h2 className="text-2xl font-black">Recent Results</h2>
-
-            <div className="mt-6 space-y-3">
-              {results.slice(0, 8).map((item) => (
-                <div key={item.id} className="border-b pb-3">
-                  <p className="font-bold">
-                    {item.students?.full_name || "Student"}
-                  </p>
-                  <p className="text-sm text-[#64748b]">
-                    {item.subject} • {item.score}% • Grade {item.grade} •{" "}
-                    {item.published ? "Published" : "Draft"}
-                  </p>
-                </div>
-              ))}
-
-              {results.length === 0 && (
-                <p className="text-[#64748b]">No results added yet.</p>
-              )}
-            </div>
-          </div>
+          {classStudents.length === 0 ? (
+            <p className="text-gray-500">No students found</p>
+          ) : (
+            classStudents.map((student) => (
+              <div key={student.id} className="border-b py-2">
+                <p className="font-bold">{student.full_name}</p>
+                <p className="text-xs text-gray-500">
+                  {student.gender || "Not set"}
+                </p>
+              </div>
+            ))
+          )}
         </div>
-              <div className="mt-10 bg-white p-6 rounded-2xl shadow">
-  <h2 className="text-xl font-bold mb-4">Class Students</h2>
-
-  {classStudents.length === 0 ? (
-    <p className="text-gray-500">No students found</p>
-  ) : (
-    classStudents.map((student) => (
-      <div key={student.id} className="border-b py-2">
-        <p className="font-bold">{student.full_name}</p>
-        <p className="text-xs text-gray-500">
-          {student.gender || "Not set"}
-        </p>
-      </div>
-    ))
-  )}
-</div>
       </section>
     </main>
   );

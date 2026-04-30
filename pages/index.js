@@ -20,7 +20,7 @@ export default function Home() {
     parent_email: "",
     message: "",
   });
-
+const [calendarEvents, setCalendarEvents] = useState([]);
   const [admissionMessage, setAdmissionMessage] = useState("");
 
   useEffect(() => {
@@ -69,6 +69,12 @@ setWebsiteSettings(settingsData || null);
   setWebsiteDownloads(downloadsData || []);
   setWebsiteEvents(eventsData || []);
 }
+const { data: calendarData } = await supabase
+  .from("calendar_events")
+  .select("*")
+  .order("event_date", { ascending: true });
+
+setCalendarEvents(calendarData || []);
   const whatsapp =
     "https://wa.me/233244986221?text=Hello%20Perfect%20Foundation%20Academy";
   const schoolLogo = websiteSettings?.school_logo_url;

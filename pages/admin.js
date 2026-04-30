@@ -514,6 +514,19 @@ async function deleteGalleryImage(item) {
     setMessage("Calendar event added.");
     loadData();
   }
+  const deleteEnquiry = async (item) => {
+  const { error } = await supabase
+    .from("admission_enquiries")
+    .delete()
+    .eq("id", item.id);
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  loadData(); // refresh list
+};
 async function deleteAnnouncement(item) {
   const confirmDelete = window.confirm(`Delete announcement: ${item.title}?`);
   if (!confirmDelete) return;
@@ -1053,6 +1066,13 @@ async function deleteEnquiry(item) {
         {item.message && (
           <p><span className="font-bold">Message:</span> {item.message}</p>
         )}
+         <button
+  type="button"
+  onClick={() => deleteEnquiry(item)}
+  className="mt-2 text-sm font-bold text-red-600"
+>
+  Delete
+</button> 
       </div>
     ))}
   </div>
@@ -1060,8 +1080,8 @@ async function deleteEnquiry(item) {
 
 <div className="mt-10 grid gap-8 md:grid-cols-3">
   <List title="Staff List" items={staff} editFn={editStaff} deleteFn={deleteStaff} />
-  <SimpleList title="Announcements" items={announcements} />
-  <SimpleList title="Calendar Events" items={calendar} />
+  <SimpleList title="Announcements" items={announcements} deleteFn={deleteAnnouncement} />
+  <SimpleList title="Calendar Events" items={calendar} deleteFn={deleteCalendarEvent} />
 </div>
 
 </div>
@@ -1155,11 +1175,35 @@ function SimpleList({ title, items = [], editFn, deleteFn }) {
         {items.length === 0 && <p className="text-[#64748b]">No records yet.</p>}
 
         {items.map((item) => (
-          <div key={item.id} className="border-b pb-3">
-            <p className="font-bold">{item.title}</p>
-            <p className="text-sm text-[#64748b]">
-              {item.message || item.description || item.event_date}
-            </p>
+  <div key={item.id} className="border-b pb-3">
+    <p className="font-bold">{item.title}</p>
+
+    <p className="text-sm text-[#64748b]">
+      {item.message || item.description || item.event_date}
+    </p>
+
+    {/* ACTION BUTTONS */}
+    {editFn && (
+      <button
+        type="button"
+        onClick={() => editFn(item)}
+        className="mt-2 text-sm font-bold text-[#d9a514]"
+      >
+        Edit
+      </button>
+    )}
+
+    {deleteFn && (
+      <button
+        type="button"
+        onClick={() => deleteFn(item)}
+        className="ml-3 mt-2 text-sm font-bold text-red-600"
+      >
+        Delete
+      </button>
+    )}
+  </div>
+))}
           </div>
         ))}
       </div>

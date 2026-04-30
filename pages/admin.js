@@ -563,23 +563,6 @@ async function deleteCalendarEvent(item) {
   loadData();
 }
 
-async function deleteEnquiry(item) {
-  const confirmDelete = window.confirm(`Delete enquiry from ${item.parent_name || item.child_name}?`);
-  if (!confirmDelete) return;
-
-  const { error } = await supabase
-    .from("admission_enquiries")
-    .delete()
-    .eq("id", item.id);
-
-  if (error) {
-    setMessage(error.message);
-    return;
-  }
-
-  setMessage("Admission enquiry deleted.");
-  loadData();
-}
   const filteredStudents = students.filter((student) => {
   const studentDisplayName = `${student.surname || ""} ${student.first_name || ""} ${student.other_names || ""}`.trim();
 

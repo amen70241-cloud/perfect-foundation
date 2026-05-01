@@ -8,6 +8,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
   function chooseLogin(type) {
     setLoginType(type);
 
@@ -48,7 +49,7 @@ export default function Login() {
       .eq("id", data.user.id)
       .single();
 
-    if (profileError) {
+    if (profileError || !profileData) {
       setMessage("Login successful, but no role profile found.");
       return;
     }
@@ -144,24 +145,24 @@ export default function Login() {
             required
           />
 
-         <div className="relative">
-  <input
-    type={showPassword ? "text" : "password"}
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-    placeholder="Password"
-    className="w-full border border-gray-200 rounded-2xl p-4 pr-14 outline-none focus:border-[#f4b41a]"
-    required
-  />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className="w-full border border-gray-200 rounded-2xl p-4 pr-14 outline-none focus:border-[#f4b41a]"
+              required
+            />
 
-  <button
-    type="button"
-    onClick={() => setShowPassword(!showPassword)}
-    className="absolute right-4 top-1/2 -translate-y-1/2 text-xl"
-  >
-    {showPassword ? "🙈" : "👁️"}
-  </button>
-</div>
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-xl"
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
 
           <button
             type="submit"
